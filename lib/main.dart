@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pearlstone/utilities/constants.dart';
 
 import 'view/home.dart';
 import 'view/login.dart';
@@ -20,11 +21,13 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => Login(),
-        '/home': (context) => Home(),
         '/register': (context) => Register(),
+        '/home': (context) => Home(),
       },
       title: 'Pearlstone',
       theme: ThemeData(
+        primaryColor: logoYellow,
+        canvasColor: appBackgroundFirst,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
