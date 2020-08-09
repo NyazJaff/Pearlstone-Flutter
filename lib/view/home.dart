@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utilities/constants.dart';
+import 'package:pearlstone/model/RadioModel.dart';
+import 'package:pearlstone/class/SelectableCard.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -15,30 +17,34 @@ class _HomeState extends State<Home> {
   int _currentStep = 0;
   bool complete = false;
 
+  static List<Map<String, dynamic>> turnOffOptions = [
+    {"key": "low",    "label": "Low (10%)"},
+    {"key": "medium", "label": "Medium (20%)"},
+    {"key": "high",   "label": "High (30%)"},
+  ];
+
+  List<RadioModel> step0 = [
+    RadioModel(false, "New", Icons.directions_car),
+    RadioModel(false, "Used", Icons.directions_car),
+  ];
+
+
   List<Map<String, dynamic>> configSteps = [
-    {"description": "What is the assumed turn off %",
+    {"description": "What is the average kW's hour for peak hours?",
+      "tip"       : "Tip: What average kW's hour is?",
+      "optionCreateCall" : createAverageKws()
+    },
+    {"description": "What is the turn off %?",
       "tip"       : "Tip: What turn off is ?",
-      "options" : [
-        {"key": "low",    "label": "Low (10%)"},
-        {"key": "medium", "label": "Medium (20%)"},
-        {"key": "high",   "label": "High (30%)"},
-      ]
+      "optionCreateCall" : createOption()
     },
     {"description": "How many events per week? ",
       "tip"       : "Tip: What event is ?",
-      "options" : [
-        {"key": "low",    "label": "Low (2)"},
-        {"key": "medium", "label": "Medium (3)"},
-        {"key": "high",   "label": "High (4)"},
-      ]
+      "optionCreateCall" : crateEventsPerWeek(5)
     },
     {"description": "Events duration (hours) ",
       "tip"       : "Tip: What event is ?",
-      "options" : [
-        {"key": "short",  "label": "Short (1)"},
-        {"key": "medium", "label": "Medium (2)"},
-        {"key": "long",   "label": "Long (4)"},
-      ]
+      "optionCreateCall" : crateDuration(min: 30, max:60)
     },
   ];
 
@@ -62,7 +68,8 @@ class _HomeState extends State<Home> {
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold),
                     ),
-                    createOption(step["options"]),
+                    SelectableCard(options: step0, step: 0),
+                    step['optionCreateCall']
                   ],
                 ),
               )
@@ -71,13 +78,15 @@ class _HomeState extends State<Home> {
     return createdSteps;
   }
 
-  createOption(option) {
+  static createOption() {
 //    var is18AndOver = configSteps.firstWhere((user) => user['description'].startsWith('What is the assumed'));
     List<Text> textList = [] ;
-    option.asMap().forEach((index, entry)
+    print(turnOffOptions);
+
+    turnOffOptions.asMap().forEach((index, entry)
     {
       textList.add(
-        Text(entry['label'])
+          Text(entry['label'])
       );
     });
 
@@ -86,6 +95,18 @@ class _HomeState extends State<Home> {
         children: textList,
       ),
     );
+  }
+
+  static createAverageKws() {
+    return Container(child: Text('average kws'));
+  }
+
+  static crateEventsPerWeek(deault) {
+    return Container(child: Text(deault.toString()));
+  }
+
+  static crateDuration({min, max}) {
+    return Container(child: Text(min.toString() + max.toString()));
   }
 
   switchStepType() {
@@ -179,8 +200,8 @@ class _HomeState extends State<Home> {
         child: Row (
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _currentStep > 0 ?
-            FlatButton(
+            _currentStep > 0
+                ? FlatButton(
                 onPressed: cancel,
                 child: Row(
                   children: <Widget>[
@@ -189,7 +210,8 @@ class _HomeState extends State<Home> {
                     Text('Back', style: TextStyle(color:textAndIconColour, fontSize: 15 ))
                   ],
                 )
-            ) : FlatButton(
+            )
+                : FlatButton(
                 onPressed: null,
                 child: Text('')
             ),
@@ -221,7 +243,7 @@ class _HomeState extends State<Home> {
   }
 
   next() {
-    _currentStep < 2 ? goTo(_currentStep + 1) : setState(() => complete = true);
+    _currentStep < 3 ? goTo(_currentStep + 1) : setState(() => complete = true);
   }
 
   cancel() {
