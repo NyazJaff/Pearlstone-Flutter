@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pearlstone/model/RadioModel.dart';
+import 'package:pearlstone/utilities/constants.dart';
 import 'RadioItem.dart';
+import 'package:pearlstone/class/Answers.dart';
 
 class SelectableCard extends StatefulWidget {
   final List<RadioModel> options;
-  final int step;
-  SelectableCard({@required this.options, @required this.step});
+  int step;
+  Function function;
+  SelectableCard({@required this.options, @required this.step, @required this.function});
 
   @override
   _SelectableCardState createState() => _SelectableCardState();
@@ -28,16 +31,16 @@ class _SelectableCardState extends State<SelectableCard> {
     return GridView.builder(
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: sampleData.length,
         childAspectRatio: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height / 2.5),
+            (MediaQuery.of(context).size.height / 2.3),
       ),
       itemCount: sampleData.length,
       itemBuilder: (context, index) {
         return Card(
           shape: sampleData[index].isSelected
               ? RoundedRectangleBorder(
-              side: BorderSide(color: Colors.indigoAccent, width: 2.0),
+              side: BorderSide(color: logoYellow, width: 2.0),
               borderRadius: BorderRadius.circular(4.0))
               : RoundedRectangleBorder(
               side: BorderSide(color: Colors.grey[200], width: 2.0),
@@ -51,9 +54,9 @@ class _SelectableCardState extends State<SelectableCard> {
               setState(() {
                 sampleData.forEach((element) => element.isSelected = false);
                 sampleData[index].isSelected = true;
-                print('step ${widget.step}');
-                print('index ${index}');
-//                answer[widget.step] = index;
+//                print('step ${widget.step}');
+                answer["turn_off"] = index;
+                widget.function();
 //                print(answer[widget.step]);
               });
             },

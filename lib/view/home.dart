@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utilities/constants.dart';
 import 'package:pearlstone/model/RadioModel.dart';
+import 'package:pearlstone/utilities/constants.dart';
 import 'package:pearlstone/class/SelectableCard.dart';
+import 'package:pearlstone/class/Answers.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,34 +19,32 @@ class _HomeState extends State<Home> {
   int _currentStep = 0;
   bool complete = false;
 
-  static List<Map<String, dynamic>> turnOffOptions = [
-    {"key": "low",    "label": "Low (10%)"},
-    {"key": "medium", "label": "Medium (20%)"},
-    {"key": "high",   "label": "High (30%)"},
+  static List<RadioModel> turn_off_options = [
+    RadioModel(false, "low", "Low (10%)", Icons.low_priority),
+    RadioModel(false, "medium", "Medium (20%)", Icons.brightness_medium),
+    RadioModel(false, "high", "High (30%)", Icons.high_quality),
   ];
-
-  List<RadioModel> step0 = [
-    RadioModel(false, "New", Icons.directions_car),
-    RadioModel(false, "Used", Icons.directions_car),
-  ];
-
 
   List<Map<String, dynamic>> configSteps = [
-    {"description": "What is the average kW's hour for peak hours?",
-      "tip"       : "Tip: What average kW's hour is?",
-      "optionCreateCall" : createAverageKws()
+    { "key"              : "average_kws",
+      "description"      : "What is the average kW's hour for peak hours?",
+      "tip"              : "Tip: What average kW's hour is?",
+      "data"             : ''
     },
-    {"description": "What is the turn off %?",
-      "tip"       : "Tip: What turn off is ?",
-      "optionCreateCall" : createOption()
+    { "key"              : "turn_off",
+      "description"      : "What is the turn off %?",
+      "tip"              : "Tip: What turn off is ?",
+      "data"             : ''
     },
-    {"description": "How many events per week? ",
-      "tip"       : "Tip: What event is ?",
-      "optionCreateCall" : crateEventsPerWeek(5)
+    { "key"              : "events_per_week",
+      "description"      : "How many events per week? ",
+      "tip"              : "Tip: What event is ?",
+      "data"             : 5
     },
-    {"description": "Events duration (hours) ",
-      "tip"       : "Tip: What event is ?",
-      "optionCreateCall" : crateDuration(min: 30, max:60)
+    { "key"              : "events_duration",
+      "description"      : "Events duration (hours) ",
+      "tip"              : "Tip: What event is ?",
+      "data"             : {"min": 30.0, "max": 360.0, "divisions": 11}
     },
   ];
 
@@ -61,15 +61,16 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      step['description'],
+                      step['description'] + answer.toString(),
                       style: TextStyle(
                           color: Colors.blueGrey,
                           fontFamily: 'OpenSans',
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold),
                     ),
-                    SelectableCard(options: step0, step: 0),
-                    step['optionCreateCall']
+                    SizedBox(height: 20),
+                    callCreateOptionMethod(step['key'], step['data'])
+                    //step['key'] == 'turn_off' ? createTurnOffOption() : step['optionCreateCall']
                   ],
                 ),
               )
@@ -78,35 +79,79 @@ class _HomeState extends State<Home> {
     return createdSteps;
   }
 
-  static createOption() {
-//    var is18AndOver = configSteps.firstWhere((user) => user['description'].startsWith('What is the assumed'));
-    List<Text> textList = [] ;
-    print(turnOffOptions);
-
-    turnOffOptions.asMap().forEach((index, entry)
-    {
-      textList.add(
-          Text(entry['label'])
-      );
+  refresh(){
+    setState(() {
     });
-
-    return Container(
-      child: Row (
-        children: textList,
-      ),
-    );
   }
 
-  static createAverageKws() {
+  createTurnOffOption() {
+    return SelectableCard(options: turn_off_options, step: 1, function: refresh );
+//    var is18AndOver = configSteps.firstWhere((user) => user['description'].startsWith('What is the assumed'));
+//    List<Text> textList = [] ;
+//    print(turnOffOptions);
+//    turnOffOptions.asMap().forEach((index, entry)
+//    {
+//      textList.add(
+//          Text(entry['label'])
+//      );
+//    });
+//
+//    return Container(
+//      child: Row (
+//        children: textList,
+//      ),
+//    );
+  }
+
+  createAverageKws() {
     return Container(child: Text('average kws'));
   }
 
-  static crateEventsPerWeek(deault) {
+  crateEventsPerWeek(deault) {
     return Container(child: Text(deault.toString()));
   }
 
-  static crateDuration({min, max}) {
-    return Container(child: Text(min.toString() + max.toString()));
+  crateEventsDuration(data) {
+    return SliderTheme(
+        data: SliderTheme.of(context).copyWith(
+      inactiveTrackColor: textAndIconColour,
+      trackShape: RectangularSliderTrackShape(),
+      trackHeight: 7.0,
+      thumbColor: logoYellow,
+      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+      overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),),
+      child: Slider(
+        value: answer['events_duration'], // Current Slider Value
+        min: data["min"],
+        max: data["max"],
+        divisions: data["divisions"],
+        activeColor: logoYellow,
+        onChanged: (double value) {
+          setState(() {
+            answer['events_duration'] = value.toDouble();
+          });
+        },
+      ),
+    );
+//  print(data["max"]);
+//    return Container(child: Text(data["min"].toString() + data["max"].toString()));
+  }
+
+  callCreateOptionMethod(key, data){
+    switch (key) {
+      case "average_kws":
+        { return createAverageKws();}
+        break;
+      case "turn_off":
+        { return createTurnOffOption();}
+        break;
+      case "events_per_week":
+        { return crateEventsPerWeek(data);}
+        break;
+      case "events_duration":
+        { return crateEventsDuration(data);}
+        break;
+    }
   }
 
   switchStepType() {

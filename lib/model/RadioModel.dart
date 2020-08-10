@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class RadioModel {
   bool isSelected;
-  String time;
+  String key;
+  String label;
   IconData icon;
-  RadioModel(this.isSelected, this.time, this.icon);
+  RadioModel(this.isSelected, this.key, this.label, this.icon);
 }
