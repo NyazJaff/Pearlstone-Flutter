@@ -13,16 +13,30 @@ class RadioItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
-              _item.icon,
-              color: _item.isSelected ? textAndIconColour : Colors.grey[500],
-              size: 35,
+            Text(
+              _item.key.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color:
+                _item.isSelected ? textAndIconColour : Colors.grey[500],
+              ),
             ),
+            SizedBox(
+              height: 7,
+            ),
+//            Icon(
+//              _item.icon,
+//              color: _item.isSelected ? textAndIconColour : Colors.grey[500],
+//              size: 35,
+//            ),
             Text(
               _item.label,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
+                fontFamily: '',
                 color:
                 _item.isSelected ? textAndIconColour : Colors.grey[500],
               ),

@@ -33,6 +33,24 @@ final kBoxDecorationStyle = BoxDecoration(
   ],
 );
 
+final valueBoxDecorationStyle = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(10.0),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 6.0,
+      offset: Offset(0, 2),
+    ),
+  ],
+);
+final valueHintBoxDecorationStyle = TextStyle(
+    color: textAndIconHintColour,
+    fontSize: 33,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'OpenSans',
+);
+
 Widget largeActionButton(btnLabel, onPress){
   return  Container (
     padding: EdgeInsets.symmetric(vertical: 25.0),

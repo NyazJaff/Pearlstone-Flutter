@@ -19,10 +19,13 @@ class _HomeState extends State<Home> {
   int _currentStep = 0;
   bool complete = false;
 
+  TextEditingController averageKwsController = TextEditingController();
+  TextEditingController eventsPerWeek = TextEditingController(text: '5');
+
   static List<RadioModel> turn_off_options = [
-    RadioModel(false, "low", "Low (10%)", Icons.low_priority),
-    RadioModel(false, "medium", "Medium (20%)", Icons.brightness_medium),
-    RadioModel(false, "high", "High (30%)", Icons.high_quality),
+    RadioModel(false, "low", "10%", Icons.low_priority),
+    RadioModel(false, "medium", "20%", Icons.brightness_medium),
+    RadioModel(false, "high", "30%", Icons.high_quality),
   ];
 
   List<Map<String, dynamic>> configSteps = [
@@ -61,11 +64,11 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      step['description'] + answer.toString(),
+                      step['description'],
                       style: TextStyle(
                           color: Colors.blueGrey,
                           fontFamily: 'OpenSans',
-                          fontSize: 20.0,
+                          fontSize: 22.0,
                           fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20),
@@ -104,37 +107,184 @@ class _HomeState extends State<Home> {
   }
 
   createAverageKws() {
-    return Container(child: Text('average kws'));
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+            alignment:  Alignment.center,
+            decoration:  valueBoxDecorationStyle,
+            height: 100.0,
+            width: 200,
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                  child: TextField(
+                    controller: averageKwsController,
+                    onChanged: (String value)  {
+                      setState(() {
+                        answer['average_kws'] = value;
+                      });
+                    },
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    style: TextStyle(
+                        color: textAndIconColour,
+                        fontSize: 33, fontFamily: 'OpenSans',
+                        fontWeight: FontWeight.bold),
+                    decoration:  InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 15),
+                        hintText: '000.0',
+                        hintStyle: valueHintBoxDecorationStyle
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20,),
+                Container (
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 30, right: 10),
+                  child: Text("kWh", style: TextStyle (
+                    fontWeight:  FontWeight.bold,
+                    letterSpacing: 3,
+                    fontFamily: 'OpenSans',
+                    color: textAndIconHintColour,
+                  )),
+                ),
+              ],
+            )
+        ),
+      ],
+    );
   }
 
   crateEventsPerWeek(deault) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+            alignment:  Alignment.center,
+            decoration:  valueBoxDecorationStyle,
+            height: 100.0,
+            width: 230,
+            child: Row(
+              children: <Widget>[
+                FlatButton(
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.black,
+                  padding: EdgeInsets.all(8.0),
+                  highlightColor: Colors.transparent,
+                  onPressed: () {
+                    setState(() {
+                      var newVal = answer['events_per_week'] - 1;
+                      if(newVal >= 0)
+                        answer['events_per_week'] = newVal;
+                    });
+                  },
+                  child: Text(
+                    "-",
+                    style: TextStyle(fontSize: 33.0),
+                  ),
+                ),
+                Flexible(
+                  child: TextField(
+                    readOnly: true,
+                    enableInteractiveSelection: false,
+                    controller: TextEditingController(text: answer['events_per_week'].toString()),
+                    style: TextStyle(
+                        color: textAndIconColour,
+                        fontSize: 33, fontFamily: 'OpenSans',
+                        fontWeight: FontWeight.bold),
+                    decoration:  InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 15),
+                        hintStyle: valueHintBoxDecorationStyle
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.black,
+                  padding: EdgeInsets.all(8.0),
+                  highlightColor: Colors.transparent,
+                  onPressed: () {
+                    setState(() {
+                      var newVal = answer['events_per_week'] + 1 ;
+                      answer['events_per_week'] = newVal;
+                    });
+                  },
+                  child: Text(
+                    "+",
+                    style: TextStyle(fontSize: 33.0),
+                  ),
+                )
+              ],
+            )
+        ),
+      ],
+    );
     return Container(child: Text(deault.toString()));
   }
 
   crateEventsDuration(data) {
-    return SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-      inactiveTrackColor: textAndIconColour,
-      trackShape: RectangularSliderTrackShape(),
-      trackHeight: 7.0,
-      thumbColor: logoYellow,
-      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-      overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),),
-      child: Slider(
-        value: answer['events_duration'], // Current Slider Value
-        min: data["min"],
-        max: data["max"],
-        divisions: data["divisions"],
-        activeColor: logoYellow,
-        onChanged: (double value) {
-          setState(() {
-            answer['events_duration'] = value.toDouble();
-          });
-        },
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: 10, right: 10),
+            alignment:  Alignment.center,
+            decoration:  valueBoxDecorationStyle,
+            height: 120.0,
+            width: 350,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 20),
+                Text(timeConvert(answer['events_duration']).toString(),
+                  style: TextStyle (
+                  fontWeight:  FontWeight.bold,
+                  letterSpacing: 2,
+                  fontSize: 20,
+                  fontFamily: 'OpenSans',
+                  color: textAndIconColour,
+                )),
+                SizedBox(height: 20),
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    inactiveTrackColor: textAndIconColour,
+                    trackShape: RectangularSliderTrackShape(),
+                    trackHeight: 7.0,
+                    thumbColor: logoYellow,
+                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                    overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),),
+                  child: Slider(
+                    value: answer['events_duration'], // Current Slider Value
+                    min: data["min"],
+                    max: data["max"],
+                    divisions: data["divisions"],
+                    activeColor: logoYellow,
+                    onChanged: (double value) {
+                      setState(() {
+                        answer['events_duration'] = value.toDouble();
+                      });},
+                  ),
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('30 Min', style: TextStyle(color: textAndIconHintColour)),
+                    Text('6 Hrs', style: TextStyle(color: textAndIconHintColour)),
+                  ],
+                )
+              ],
+            )
+
+        )
+      ]
+
     );
-//  print(data["max"]);
-//    return Container(child: Text(data["min"].toString() + data["max"].toString()));
+  }
+
+  String timeConvert(double time) {
+    return (time/60%24).toString() + " Hours";
   }
 
   callCreateOptionMethod(key, data){
