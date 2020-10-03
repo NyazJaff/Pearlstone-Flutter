@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pearlstone/utilities/layout_helper.dart';
 import 'package:pearlstone/utilities/login_auth.dart';
+import 'package:pearlstone/utilities/util.dart';
 import '../utilities/constants.dart';
 
 class Login extends StatefulWidget {
@@ -95,11 +97,10 @@ class _LoginState extends State<Login> {
   }
   Widget _buildLoginBtn(){
     return largeActionButton("LOGIN", () {
+      navigateTo(context, path : '/search_customer' );
       auth.signIn("test@test.com", "123456").then((value) {
         if (value == 'Success') {
-          FocusScope.of(context).requestFocus(new FocusNode());
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/home');
+          print('dd');
         }else{
           setState(() {
 
@@ -170,7 +171,7 @@ class _LoginState extends State<Login> {
                       _buildForgotPasswordBtn(),
                       _buildLoginBtn(),
                       SizedBox(height: 40.0),
-                      _buildSignUpBtn(),
+                      // _buildSignUpBtn(),
                     ],
                   ),
                 ),

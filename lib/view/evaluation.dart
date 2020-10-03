@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pearlstone/utilities/layout_helper.dart';
+import 'package:pearlstone/utilities/util.dart';
 import '../utilities/constants.dart';
 import 'package:pearlstone/model/RadioModel.dart';
 import 'package:pearlstone/utilities/constants.dart';
 import 'package:pearlstone/class/SelectableCard.dart';
 import 'package:pearlstone/class/Answers.dart';
 
-class Home extends StatefulWidget {
+class Evaluation extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _EvaluationState createState() => _EvaluationState();
 //  Yellow FFCA0A
 //  Grey 505D58
 //  https://coolors.co/gradient-palette/505d58-ffca0a?number=7
 }
 
-class _HomeState extends State<Home> {
-  StepperType stepperType = StepperType.horizontal;
+class _EvaluationState extends State<Evaluation> {
+  StepperType stepperType = StepperType.vertical;
   int _currentStep = 0;
   bool complete = false;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController averageKwsController = TextEditingController();
   TextEditingController eventsPerWeek = TextEditingController(text: '5');
 
@@ -30,12 +33,12 @@ class _HomeState extends State<Home> {
 
   List<Map<String, dynamic>> configSteps = [
     { "key"              : "average_kws",
-      "description"      : "What is the average kW's hour for peak hours?",
+      "description"      : "What is the peak demand (kw)?",
       "tip"              : "Tip: What average kW's hour is?",
       "data"             : ''
     },
     { "key"              : "turn_off",
-      "description"      : "What is the turn off %?",
+      "description"      : "Please select the assumed turn down?",
       "tip"              : "Tip: What turn off is ?",
       "data"             : ''
     },
@@ -45,7 +48,7 @@ class _HomeState extends State<Home> {
       "data"             : 5
     },
     { "key"              : "events_duration",
-      "description"      : "Events duration (hours) ",
+      "description"      : "Average duration per event?",
       "tip"              : "Tip: What event is ?",
       "data"             : {"min": 30.0, "max": 360.0, "divisions": 11}
     },
@@ -80,6 +83,133 @@ class _HomeState extends State<Home> {
           )
         });
     return createdSteps;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar (
+        title: Text('Evaluation'),
+        leading: new IconButton( icon: new Icon(Icons.clear), tooltip: 'Main', onPressed: () {
+          navigateTo(context, path: '/search_customer');
+        }),
+      ),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Stack(
+            children: <Widget>[
+              buildBackground(),
+              Column(
+                children: <Widget>[
+                  complete
+                      ? Expanded(
+                    child: Center(
+                      child: AlertDialog(
+                        title: new Text("Profile Created"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            new Text(
+                              "Tada!",
+                            ),
+//                    method2()
+                          ],
+                        ),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text("Close"),
+                            onPressed: () {
+                              setState(() => complete = false);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                      : Expanded(
+                    child: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return Stepper(
+                            type: stepperType,
+                            steps: createSteps(),
+                            currentStep: _currentStep,
+                            onStepContinue: next,
+                            onStepTapped: (step) => goTo(step),
+                            onStepCancel: cancel,
+                            controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+                              return Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: null,
+                                  ),
+                                  Container(
+                                    child: null,
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: logoYellow,
+      //   child: Icon(Icons.list),
+      //   onPressed: switchStepType,
+      // ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.only(top: 10, bottom: 25),
+        child: Row (
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            _currentStep > 0
+                ? FlatButton(
+                onPressed: cancel,
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.arrow_back_ios, size: 30, color: textAndIconColour),
+                    SizedBox(width: 3.0),
+                    Text('Back', style: TextStyle(color:textAndIconColour, fontSize: 15 ))
+                  ],
+                )
+            )
+                : FlatButton(
+                onPressed: null,
+                child: Text('')
+            ),
+            _currentStep < configSteps.length - 1
+                ? FlatButton(
+                onPressed: next,
+                child: Row(
+                  children: <Widget>[
+                    Text('Continue', style: TextStyle(color:textAndIconColour, fontSize: 15 )),
+                    SizedBox(width: 3.0),
+                    Icon(Icons.arrow_forward_ios, size: 30, color: textAndIconColour)
+                  ],
+                )
+            )
+                : FlatButton(
+                onPressed: next,
+                child: Row(
+                  children: <Widget>[
+                    Text('Evaluate', style: TextStyle(color:textAndIconColour, fontSize: 15 )),
+                    SizedBox(width: 3.0),
+                    Icon(Icons.bubble_chart, size: 30, color: logoYellow)
+                  ],
+                )
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   refresh(){
@@ -233,7 +363,7 @@ class _HomeState extends State<Home> {
             alignment:  Alignment.center,
             decoration:  valueBoxDecorationStyle,
             height: 120.0,
-            width: 350,
+            width: scrSize(_scaffoldKey.currentContext) * 35,
             child: Column(
               children: <Widget>[
                 SizedBox(height: 20),
@@ -313,132 +443,13 @@ class _HomeState extends State<Home> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar (
-        title: Text('Evaluation'),
-        leading: new IconButton( icon: new Icon(Icons.clear), tooltip: 'Main', onPressed: () {}),
-      ),
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              buildBackground(),
-              Column(
-                children: <Widget>[
-                  complete
-                      ? Expanded(
-                    child: Center(
-                      child: AlertDialog(
-                        title: new Text("Profile Created"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            new Text(
-                              "Tada!",
-                            ),
-//                    method2()
-                          ],
-                        ),
-                        actions: <Widget>[
-                          new FlatButton(
-                            child: new Text("Close"),
-                            onPressed: () {
-                              setState(() => complete = false);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                      : Expanded(
-                    child: StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
-                          return Stepper(
-                            type: stepperType,
-                            steps: createSteps(),
-                            currentStep: _currentStep,
-                            onStepContinue: next,
-                            onStepTapped: (step) => goTo(step),
-                            onStepCancel: cancel,
-                            controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-                              return Row(
-                                children: <Widget>[
-                                  Container(
-                                    child: null,
-                                  ),
-                                  Container(
-                                    child: null,
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: logoYellow,
-        child: Icon(Icons.list),
-        onPressed: switchStepType,
-      ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(top: 10, bottom: 25),
-        child: Row (
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            _currentStep > 0
-                ? FlatButton(
-                onPressed: cancel,
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.arrow_back_ios, size: 30, color: textAndIconColour),
-                    SizedBox(width: 3.0),
-                    Text('Back', style: TextStyle(color:textAndIconColour, fontSize: 15 ))
-                  ],
-                )
-            )
-                : FlatButton(
-                onPressed: null,
-                child: Text('')
-            ),
-            _currentStep < configSteps.length - 1
-                ? FlatButton(
-                onPressed: next,
-                child: Row(
-                  children: <Widget>[
-                    Text('Continue', style: TextStyle(color:textAndIconColour, fontSize: 15 )),
-                    SizedBox(width: 3.0),
-                    Icon(Icons.arrow_forward_ios, size: 30, color: textAndIconColour)
-                  ],
-                )
-            )
-                : FlatButton(
-                onPressed: next,
-                child: Row(
-                  children: <Widget>[
-                    Text('Evaluate', style: TextStyle(color:textAndIconColour, fontSize: 15 )),
-                    SizedBox(width: 3.0),
-                    Icon(Icons.bubble_chart, size: 30, color: logoYellow)
-                  ],
-                )
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
   next() {
-    _currentStep < 3 ? goTo(_currentStep + 1) : setState(() => complete = true);
+    _currentStep < 3
+        ? goTo(_currentStep + 1)
+        : setState(() {
+          navigateTo(_scaffoldKey.currentContext, path:'/evaluation_result');
+          complete = true;
+        });
   }
 
   cancel() {

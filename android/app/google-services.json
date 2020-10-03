@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "829309297995",
+    "firebase_url": "https://pearlstone-3e6c7.firebaseio.com",
+    "project_id": "pearlstone-3e6c7",
+    "storage_bucket": "pearlstone-3e6c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829309297995:android:0faa3e9c30827f2371b4ce",
+        "android_client_info": {
+          "package_name": "com.pearlstoneenergy.mobile.pearlstone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "829309297995-nk2824c1rdj72hvmffu9iv0ga7iggtfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtxlf-ETzdk4egqd8F3yN776WyZkTMo94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "829309297995-nk2824c1rdj72hvmffu9iv0ga7iggtfv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "829309297995-se24213grj4sbj77fdn504aa78j2r4dm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pearlstoneenergy.mobile.pearlstone"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

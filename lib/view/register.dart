@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pearlstone/class/Input.dart';
+import 'package:pearlstone/utilities/layout_helper.dart';
+import 'package:pearlstone/utilities/util.dart';
 import '../utilities/constants.dart';
 
 class Register extends StatefulWidget {
@@ -11,103 +14,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
-  Widget _buildFullName(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-            'Full Name *',
-            style: kLabelStyle
-        ),
-        SizedBox(height: 10.0),
-        Container(
-            alignment:  Alignment.centerLeft,
-            decoration:  kBoxDecorationStyle,
-            height: 60.0,
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              style: TextStyle(color: textAndIconColour),
-              decoration:  InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 14.0),
-                  prefixIcon: Icon(
-                    Icons.email,
-                    color: textAndIconColour,
-                  ),
-                  hintText: 'Enter your Full name',
-                  hintStyle: kHintTextStyle
-              ),
-            )
-        )
-      ],
-    );
-  }
-  Widget _buildEmail(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-            'Email *',
-            style: kLabelStyle
-        ),
-        SizedBox(height: 10.0),
-        Container(
-            alignment:  Alignment.centerLeft,
-            decoration:  kBoxDecorationStyle,
-            height: 60.0,
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              style: TextStyle(color: textAndIconColour),
-              decoration:  InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 14.0),
-                  prefixIcon: Icon(
-                    Icons.email,
-                    color: textAndIconColour,
-                  ),
-                  hintText: 'Enter your Email',
-                  hintStyle: kHintTextStyle
-              ),
-            )
-        )
-      ],
-    );
-  }
-  Widget _buildPassword(label, hint){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-            label,
-            style: kLabelStyle
-        ),
-        SizedBox(height: 10.0),
-        Container(
-            alignment:  Alignment.centerLeft,
-            decoration:  kBoxDecorationStyle,
-            height: 60.0,
-            child: TextField(
-              obscureText: true,
-              style: TextStyle(
-                  color: textAndIconColour,
-                  fontFamily: 'OpenSans'
-              ),
-              decoration:  InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 14.0),
-                  prefixIcon: Icon(
-                    Icons.lock,
-                    color: textAndIconColour,
-                  ),
-                  hintText: hint + ' your Password',
-                  hintStyle: kHintTextStyle
-              ),
-            )
-        )
-      ],
-    );
-  }
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Widget _buildSignInBtn() {
     return GestureDetector(
@@ -138,52 +45,64 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: emptyAppBar(),
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              buildBackground(),
-              Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 60.0),
-                  child: Column(
-                    children: <Widget>[
-//                      logoDisplay(),
-                      Text(
-                        'Register With Us',
-                        style: TextStyle(
-                            color: textAndIconColour,
-                            fontFamily: 'OpenSans',
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold
-                        ),
-                      ),
-                      SizedBox(height: 30.0),
-                      _buildFullName(),
-                      SizedBox(height: 30.0),
-                      _buildEmail(),
-                      SizedBox(height: 30.0),
-                      _buildPassword('Password *', "Enter"),
-                      SizedBox(height: 30.0),
-                      _buildPassword('Confirm password *', "Confirm"),
-                      SizedBox(height: 30.0),
-                      largeActionButton("REGISTER", () => Navigator.pushNamed(context, '/home') ),
-                      SizedBox(height: 40.0),
-                      _buildSignInBtn(),
-                    ],
-                  ),
-                ),
+    return mainViews(scaffoldKey, context, 'New Customer',  Container(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 30.0),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Welcome!',
+              style: TextStyle(
+                  color: textAndIconColour,
+                  fontFamily: 'OpenSans',
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold
               ),
-            ],
-          ),
+            ),
+            Input(
+              label: 'First Name',
+              hint:  'First Name',
+              leadingIcon: Icons.person,
+            ),
+            SizedBox(height: 30.0),
+            Input(
+              label: 'Family Name',
+              hint:  'Family Name',
+              leadingIcon: Icons.person,
+            ),
+            SizedBox(height: 30.0),
+            Input(
+              label: 'Email Address',
+              hint:  'Email Address',
+              leadingIcon: Icons.email,
+            ),
+            SizedBox(height: 30.0),
+            Input(
+              label: 'Mobile Number',
+              hint:  'Mobile Number',
+              leadingIcon: Icons.phone_in_talk,
+            ),
+            SizedBox(height: 30.0),
+            Input(
+              label: 'Building Name',
+              hint:  'Building Name',
+              leadingIcon: Icons.home,
+            ),
+            SizedBox(height: 30.0),
+            Input(
+              label: 'Building Address',
+              hint:  'Building Address',
+              leadingIcon: Icons.pin_drop,
+            ),
+            SizedBox(height: 30.0),
+            largeActionButton("REGISTER", () => navigateTo(context, path:'/search_customer')),
+            SizedBox(height: 40.0),
+            // _buildSignInBtn(),
+          ],
         ),
       ),
-    );
+    ));
   }
 }
