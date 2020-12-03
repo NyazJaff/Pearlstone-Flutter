@@ -1,60 +1,87 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'http_client.dart';
+import 'package:pearlstone/model/UserModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class BaseAuth {
   Future<String> signIn(String email, String password);
 
-  Future<String> signUp(String email, String password);
+  // Future<String> signUp(String email, String password);
 
-  Future<FirebaseUser> getCurrentUser();
+  Future<UserModel> getCurrentUser();
 
-  Future<void> sendEmailVerification();
+  // Future<void> sendEmailVerification();
 
-  Future<void> signOut();
+  Future<void> logout();
 
-  Future<bool> isEmailVerified();
 }
 
 class Auth implements BaseAuth {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  MyHttpClient httpClient = new MyHttpClient();
 
   Future<String> signIn(String email, String password) async {
-
+    String status = 'error';
     try{
-//      AuthResult result =
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-//      FirebaseUser user = result.user;
-      return 'Success';
+     await httpClient.makeJsonPost({
+        "email": email,
+        "password": password,
+      }, url: 'user/login').then((response) async {
+        if(response['status'] == 'success'){
+          UserModel user = UserModel.fromJson(response['user']);
+          await setCurrentUser(user);
+          status = 'success';
+        }else{
+          status = response['message'] != null ? response['message'] : 'Failed to login';
+        }
+        // await logout();
+        // user = await getCurrentUser();
+      });
+     return status;
     }catch (e){
-      return 'Failed';
+      return 'error';
     }
-
   }
 
-  Future<String> signUp(String email, String password) async {
-    AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    FirebaseUser user = result.user;
-    return user.uid;
-  }
-
-  Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+  Future<UserModel> setCurrentUser(user) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('current_user', json.encode(user));
     return user;
   }
 
-  Future<void> signOut() async {
-    return _firebaseAuth.signOut();
+  Future<UserModel> getCurrentUser() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String userString = pref.getString('current_user');
+    if (userString == null) {
+      return null;
+    }
+      return UserModel.fromJson(jsonDecode(userString));
+   }
+
+  Future<void> logout() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.remove('current_user');
   }
 
-  Future<void> sendEmailVerification() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    user.sendEmailVerification();
-  }
-
-  Future<bool> isEmailVerified() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user.isEmailVerified;
+  Future<List<UserModel>> getUsersByName(name) async {
+    List<UserModel> users = [];
+    UserModel currentUser = await getCurrentUser();
+    try{
+      await httpClient.makeJsonGet(dataParam: {
+        "name":    name != null ? name : '',
+        "user_id": currentUser != null ? currentUser.id.toString() : "0",
+      }, url: 'user').then((response) {
+        if(response['status'] == 'success'){
+          response['data'].forEach((user) {
+            users.add(UserModel.fromJson(user));
+          });
+          // UserModel user = UserModel.fromJson(response['user']);
+          // await setCurrentUser(user);
+        }
+      });
+      return users;
+    }catch (e){
+      return [];
+    }
   }
 }

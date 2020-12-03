@@ -144,7 +144,13 @@ mainViews(scaffoldKey,context, title, viewBody, {actions: const <Widget>[], bott
       body:  AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
         child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () {
+            if(FocusScope.of(context).isFirstFocus) {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            }
+            // FocusScope.of(context).requestFocus(new FocusNode());
+            // FocusScope.of(context).unfocus(),
+          },
           child:  Stack(children: <Widget>[
             buildBackground(),
             Scaffold(

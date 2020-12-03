@@ -1,6 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pearlstone/model/UserModel.dart';
 import 'package:pearlstone/utilities/constants.dart';
+import 'package:pearlstone/utilities/login_auth.dart';
 import 'package:pearlstone/utilities/util.dart';
 import 'menu_item.dart';
 
@@ -10,6 +12,20 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
+  UserModel currentUser;
+  final Auth auth = new Auth();
+
+  @override
+  Future<void> initState() {
+    // TODO: implement initState
+    super.initState();
+
+    auth.getCurrentUser().then((user) {
+      setState(() {
+        currentUser = user;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +81,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             Navigator.pushNamed(context, '/login');
                           },
                         ),
-                        MenuItem(
+                        currentUser != null
+                            ? MenuItem(
                           icon: Icons.exit_to_app,
                           title: "Logout",
                           onTap: () async {
+                            auth.logout();
                             Navigator.pop(context);
                             Navigator.pushNamed(context, '/login');
+                            setState(() {});
                           },
                         )
+                            : Container()
                       ],
                     ),
                   ],

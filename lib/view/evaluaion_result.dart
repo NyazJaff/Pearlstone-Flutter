@@ -14,7 +14,9 @@ class EvaluationResult extends StatefulWidget {
 
 class _EvaluationResultState extends State<EvaluationResult> {
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  refresh(){ setState(() {}); }
+  refresh(){
+    // setState(() {});
+  }
 
   @override
   Widget build(BuildContext ctx) {

@@ -1,0 +1,82 @@
+import 'dart:io';
+import 'dart:convert';
+import 'dart:core';
+import 'dart:async';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+
+class MyHttpClient  {
+  HttpClient client = new HttpClient();
+
+  Future<Map<String, dynamic>> saveQuestions(
+      question, {
+                  type: 'question',
+                  answered: false,
+                }) async{
+    return await makeJsonPost({
+      "question"   : question,
+      "type"       : type,
+      "deleted"    : false,
+      "answered"   : answered,
+      "device_id"  : 'test',
+//      "date_added" : DateTime.now().toString()
+    });
+  }
+
+  Future<Map<String, dynamic>> updateQuestion(documentId, dataParam) async {
+    var response = await _makeJsonPut(dataParam, url: documentId);
+    if(response['status'] == "SUCCESS")
+      return response['data'];
+    else{
+      return {};
+    }
+//    return await _makeJsonGet(url: dataParam);
+  }
+
+  Future<Map<String, dynamic>> _makeJsonPut(dataParam, {url: ""}) async{
+    var response = await http.put(
+        apiUrl() + url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"data": dataParam}));
+    return _httpJsonResponse(response);
+  }
+
+  Future<Map<String, dynamic>> makeJsonGet({dataParam: "", url: ""}) async{
+    String queryString = Uri(queryParameters: dataParam).query;
+    var requestUrl = apiUrl() + url + '?' + queryString;
+    var response = await http.get(requestUrl, headers: {
+      HttpHeaders.contentTypeHeader: 'application/json',
+    });
+    return _httpJsonResponse(response);
+  }
+
+  Future<Map<String, dynamic>> makeJsonPost(dataParam, {url: ""}) async{
+    var response = await http.post(
+        apiUrl() + url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(dataParam));
+    return _httpJsonResponse(response);
+  }
+
+  Map<String, dynamic> _httpJsonResponse(response){
+    var jsonResponse = convert.jsonDecode(response.body);
+    if(jsonResponse['status'] == 'success'){
+      print('SUCCESS--------- HTTP API SUCCESS MESSAGE  --------------- START');
+      print(response.body != null ? response.body : 'NO DATA RETURNED');
+      print('SUCCESS--------- HTTP API SUCCESS MESSAGE  --------------- END');
+    }else{
+      print('ERROR--------- HTTP API ERROR MESSAGE  --------------- START');
+      print(response.body != null ? response.body : 'NO DATA RETURNED');
+      print('ERROR--------- HTTP API ERROR MESSAGE  --------------- END');
+    }
+    return jsonResponse;
+  }
+
+  String apiUrl(){
+   // if(!kReleaseMode) {
+     return 'http://localhost:3000/';
+   // }
+    // return 'https://anas-islam.herokuapp.com/api/v1/anas_islam/';
+  }
+}

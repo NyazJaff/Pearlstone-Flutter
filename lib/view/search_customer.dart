@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pearlstone/class/Input.dart';
+import 'package:pearlstone/model/UserModel.dart';
 import 'package:pearlstone/utilities/layout_helper.dart';
+import 'package:pearlstone/utilities/login_auth.dart';
 import 'package:pearlstone/utilities/util.dart';
 import '../utilities/constants.dart';
 import 'package:pearlstone/model/RadioModel.dart';
@@ -19,14 +21,29 @@ class SearchCustomer extends StatefulWidget {
 
 class _SearchCustomerState extends State<SearchCustomer> {
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final Auth auth = new Auth();
 
-  refresh(){
+  TextEditingController nameSearch = TextEditingController();
+
+  @override
+  Future<void> initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameSearch.dispose();
+    super.dispose();
+  }
+
+  onNameChangeCallback(name){
     setState(() {
+      auth.getUsersByName(name);
     });
   }
 
   currentCustomers(){
-   List<dynamic> textList = [{"name": "Nyaz Jaff"}, {"name": "Ilyas Jaff"}, {"name": "Shakan Jaff"}] ;
    return FittedBox(
      child: Container(
          alignment:  Alignment.center,
@@ -36,37 +53,50 @@ class _SearchCustomerState extends State<SearchCustomer> {
        child: Column(
          children: <Widget>[
            Input(
-             hint: 'Customer name',
+             onNameChangeCallback: onNameChangeCallback,
+             controller:  nameSearch,
+             hint:        'Customer name',
              leadingIcon: Icons.person_pin,
            ),
-           Container(
-             height: 200,
-             child: ListView.separated (
-               itemCount: textList.length,
-               itemBuilder: (BuildContext context, int index){
-                 var record = textList[index];
-                 return Material(
-                   type: MaterialType.transparency,
-                   child: ListTile(
-                       title: Text(record['name']),
-                       subtitle:  Container(
-                         child: Column(
-                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                           children: <Widget>[
-                             Container(
-                               child: Text("ID: 12321 ".toString()),
-                             ),
-                           ],
-                         ),),
-                       onTap: () {
-                         navigateTo(context, path: '/evaluation');
-                       }
-                   ),
+           FutureBuilder(
+             future: auth.getUsersByName(nameSearch.text),
+             builder: (context, snapshot){
+               if (snapshot.connectionState == ConnectionState.done) {
+                 return Container(
+                   height: 200,
+                   child: ListView.separated (
+                     itemCount: snapshot.data.length,
+                     itemBuilder: (BuildContext context, int index){
+                       UserModel user = snapshot.data[index];
+                       return Material(
+                         type: MaterialType.transparency,
+                         child: ListTile(
+                             title: Text(user.first_name + " " + user.last_name),
+                             subtitle:  Container(
+                               child: Column(
+                                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                                 children: <Widget>[
+                                   Container(
+                                     child: Text("ID: "+user.id.toString()),
+                                   ),
+                                 ],
+                               ),),
+                             onTap: () {
+                               navigateTo(context, path: '/evaluation');
+                             }
+                         ),
+                       );
+                     }, separatorBuilder: (BuildContext context, int index) {
+                     return Container();
+                   },),
                  );
-               }, separatorBuilder: (BuildContext context, int index) {
-               return Container();
-             },),
-           )
+               }else{
+                 return Container(
+                   child: loading(),
+                 );
+               }
+             }
+           ),
          ],
        )
      ),

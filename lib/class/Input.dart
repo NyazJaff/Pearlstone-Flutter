@@ -7,12 +7,16 @@ class Input extends StatefulWidget {
   final String   hint, label;
   final bool     typePass;
   final IconData leadingIcon;
+  final TextEditingController controller;
+  final void Function(String) onNameChangeCallback;
 
   const Input({Key key,
     this.label       = '',
     this.hint        = '',
     this.typePass    = false,
-    this.leadingIcon = Icons.lock}) : super(key: key);
+    this.leadingIcon = Icons.lock,
+    this.controller,
+    this.onNameChangeCallback}) : super(key: key);
 
 
   @override
@@ -32,18 +36,28 @@ class _InputState extends State<Input> {
         SizedBox(height: widget.label != '' ? 10.0 : 0),
         Container(
             alignment:  Alignment.centerLeft,
-            decoration:  kBoxDecorationStyle,
-            height: widget.label != '' ? 60.0 : 50.0,
+            decoration: kBoxDecorationStyle,
+            height:     widget.label != '' ? 60.0 : 50.0,
             child: TextField(
+              onChanged: (String value)  {
+                print(value);
+                print("onchange");
+                if (widget.onNameChangeCallback != null){
+                  // if(value != widget.controller.text) {
+                    widget.onNameChangeCallback(value);
+                  // }
+                }
+              },
+              controller:  widget.controller,
               obscureText: widget.typePass,
               style: TextStyle(
-                  color: textAndIconColour,
+                  color:      textAndIconColour,
                   fontFamily: 'OpenSans'
               ),
-              decoration:  InputDecoration(
-                  border: InputBorder.none,
+              decoration:         InputDecoration(
+                  border:         InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 14.0),
-                  prefixIcon: Icon(
+                  prefixIcon:     Icon(
                     widget.leadingIcon,
                     color: textAndIconColour,
                   ),

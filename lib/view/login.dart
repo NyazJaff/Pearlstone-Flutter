@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pearlstone/model/UserModel.dart';
 import 'package:pearlstone/utilities/layout_helper.dart';
 import 'package:pearlstone/utilities/login_auth.dart';
 import 'package:pearlstone/utilities/util.dart';
@@ -13,10 +14,36 @@ class Login extends StatefulWidget {
 //  https://coolors.co/gradient-palette/505d58-ffca0a?number=7
 }
 
-class _LoginState extends State<Login> {
 
+class _LoginState extends State<Login> {
   final Auth auth = new Auth();
   final Color logoRound = Color(0xFFEEEEEE);
+
+  bool invalidLogin = false;
+
+  final email = TextEditingController();
+  final password = TextEditingController();
+  @override
+  Future<void> initState() {
+    // TODO: implement initState
+    super.initState();
+
+    auth.getCurrentUser().then((user) {
+      if(user != null){
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/search_customer');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
 
   Widget _buildEmail(){
     return Column(
@@ -32,6 +59,7 @@ class _LoginState extends State<Login> {
             decoration:  kBoxDecorationStyle,
             height: 60.0,
             child: TextField(
+              controller: email,
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(color: textAndIconColour),
               decoration:  InputDecoration(
@@ -63,6 +91,7 @@ class _LoginState extends State<Login> {
             decoration:  kBoxDecorationStyle,
             height: 60.0,
             child: TextField(
+              controller: password,
               obscureText: true,
               style: TextStyle(
                   color: textAndIconColour,
@@ -95,16 +124,33 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+  Widget _buildInvalidLogin(){
+    return invalidLogin == true
+        ? Container(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          'Incorrect Email or Password',
+          style: TextStyle(
+            color: Colors.deepOrange,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    )
+        : Container();
+  }
   Widget _buildLoginBtn(){
     return largeActionButton("LOGIN", () {
-      navigateTo(context, path : '/search_customer' );
-      auth.signIn("test@test.com", "123456").then((value) {
-        if (value == 'Success') {
-          print('dd');
+      // "up694452@myport.ac.uk", "123"
+      auth.signIn(email.text, password.text).then((value) {
+        if (value == 'success') {
+          navigateTo(context, path : '/search_customer' );
         }else{
-          setState(() {
-
-          });
+          print(value);
+          setState(() {invalidLogin = true;});
         }
       });
     });
@@ -168,6 +214,7 @@ class _LoginState extends State<Login> {
                       _buildEmail(),
                       SizedBox(height: 30.0),
                       _buildPassword(),
+                      _buildInvalidLogin(),
                       _buildForgotPasswordBtn(),
                       _buildLoginBtn(),
                       SizedBox(height: 40.0),
