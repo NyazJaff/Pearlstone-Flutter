@@ -57,19 +57,21 @@ final valueHintBoxDecorationStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
-Widget largeActionButton(btnLabel, onPress, { width : double.infinity, icon: false }){
+Widget largeActionButton(btnLabel, onPress, { width : double.infinity, icon: false, isLoading: false}){
   return  Container (
     padding: EdgeInsets.symmetric(vertical: 25.0),
     width: width,
     child: RaisedButton(
       elevation: 5.0,
-      onPressed: onPress,
+      onPressed: isLoading ? () => {} : onPress,
       padding: EdgeInsets.all(15.0),
       shape: RoundedRectangleBorder(
           borderRadius:  BorderRadius.circular(30.0)
       ),
       color: logoYellow,
-      child: Row(
+      child: isLoading
+          ? loading(padding: 4.0)
+          : Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           icon != false
@@ -127,9 +129,9 @@ Widget buildBackground(){
   );
 }
 
-Widget loading(){
+Widget loading({padding = 20.0}){
   return Padding (
-    padding: EdgeInsets.all(20.0),
+    padding: EdgeInsets.all(padding),
     child: ColorLoader4 (
       dotOneColor:  Colors.red,
       dotTwoColor:  Colors.lightGreen,

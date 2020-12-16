@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pearlstone/utilities/layout_helper.dart';
+import 'package:pearlstone/utilities/reporting.dart';
 import 'package:pearlstone/utilities/util.dart';
 import '../utilities/constants.dart';
 import 'package:pearlstone/model/RadioModel.dart';
 import 'package:pearlstone/utilities/constants.dart';
 import 'package:pearlstone/class/SelectableCard.dart';
-import 'package:pearlstone/class/Answers.dart';
 
 class Evaluation extends StatefulWidget {
   @override
@@ -24,6 +24,8 @@ class _EvaluationState extends State<Evaluation> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController averageKwsController = TextEditingController();
   TextEditingController eventsPerWeek = TextEditingController(text: '5');
+  Reporting reporting = new Reporting();
+  Map<String, dynamic> answer = {'average_kws': 0, 'turn_off': null, 'events_per_week': 5, 'events_duration': 30.0};
 
   static List<RadioModel> turn_off_options = [
     RadioModel(false, "low", "10%", Icons.low_priority),
@@ -212,8 +214,9 @@ class _EvaluationState extends State<Evaluation> {
     );
   }
 
-  refresh(){
+  refresh(index){
     setState(() {
+      answer["turn_off"] = index;
     });
   }
 
@@ -443,13 +446,15 @@ class _EvaluationState extends State<Evaluation> {
     });
   }
 
-  next() {
+  next() async {
     _currentStep < 3
         ? goTo(_currentStep + 1)
-        : setState(() {
-          navigateTo(_scaffoldKey.currentContext, path:'/evaluation_result');
-          complete = true;
-        });
+        : callEvaluationResult();
+  }
+
+  callEvaluationResult() async{
+    await reporting.setLocalEstimateReportData(answer);
+    navigateTo(_scaffoldKey.currentContext, path:'/evaluation_result');
   }
 
   cancel() {

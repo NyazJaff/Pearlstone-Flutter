@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pearlstone/class/Input.dart';
 import 'package:pearlstone/model/UserModel.dart';
 import 'package:pearlstone/utilities/layout_helper.dart';
 import 'package:pearlstone/utilities/login_auth.dart';
+import 'package:pearlstone/utilities/reporting.dart';
 import 'package:pearlstone/utilities/util.dart';
 import '../utilities/constants.dart';
-import 'package:pearlstone/model/RadioModel.dart';
 import 'package:pearlstone/utilities/constants.dart';
-import 'package:pearlstone/class/SelectableCard.dart';
-import 'package:pearlstone/class/Answers.dart';
 
 class SearchCustomer extends StatefulWidget {
   @override
@@ -24,6 +21,8 @@ class _SearchCustomerState extends State<SearchCustomer> {
   final Auth auth = new Auth();
 
   TextEditingController nameSearch = TextEditingController();
+  final Reporting reporting = new Reporting();
+
 
   @override
   Future<void> initState() {
@@ -71,7 +70,7 @@ class _SearchCustomerState extends State<SearchCustomer> {
                        return Material(
                          type: MaterialType.transparency,
                          child: ListTile(
-                             title: Text(user.first_name + " " + user.last_name),
+                             title: Text(user.first_name + " " + (safeString(user.last_name))),
                              subtitle:  Container(
                                child: Column(
                                  crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -82,6 +81,8 @@ class _SearchCustomerState extends State<SearchCustomer> {
                                  ],
                                ),),
                              onTap: () {
+
+                               reporting.setCurrentEvaluationUserId(user.id);
                                navigateTo(context, path: '/evaluation');
                              }
                          ),

@@ -63,12 +63,12 @@ class MyHttpClient  {
     var jsonResponse = convert.jsonDecode(response.body);
     if(jsonResponse['status'] == 'success'){
       print('SUCCESS--------- HTTP API SUCCESS MESSAGE  --------------- START');
-      print(response.body != null ? response.body : 'NO DATA RETURNED');
-      print('SUCCESS--------- HTTP API SUCCESS MESSAGE  --------------- END');
+      // print(response.body != null ? response.body : 'NO DATA RETURNED');
+      // print('SUCCESS--------- HTTP API SUCCESS MESSAGE  --------------- END');
     }else{
       print('ERROR--------- HTTP API ERROR MESSAGE  --------------- START');
-      print(response.body != null ? response.body : 'NO DATA RETURNED');
-      print('ERROR--------- HTTP API ERROR MESSAGE  --------------- END');
+      // print(response.body != null ? response.body : 'NO DATA RETURNED');
+      // print('ERROR--------- HTTP API ERROR MESSAGE  --------------- END');
     }
     return jsonResponse;
   }

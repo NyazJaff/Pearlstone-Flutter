@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:pearlstone/model/UserModel.dart';
 import 'package:pearlstone/utilities/constants.dart';
+import 'package:pearlstone/utilities/generic_shared_preference.dart';
 import 'package:pearlstone/utilities/login_auth.dart';
 import 'package:pearlstone/utilities/util.dart';
 import 'menu_item.dart';
@@ -14,6 +15,7 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   UserModel currentUser;
   final Auth auth = new Auth();
+  final GenericSharedPreference genericSharedPreference = new GenericSharedPreference();
 
   @override
   Future<void> initState() {
@@ -54,6 +56,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.person,
                           title: "Customers",
                           onTap: () {
+                            new GenericSharedPreference().clearLocalEvaluationData();
                             Navigator.pop(context);
                             Navigator.pushNamed(context, '/search_customer');
                           },
@@ -62,6 +65,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.person_add,
                           title: "New Customer",
                           onTap: (){
+                            new GenericSharedPreference().clearLocalEvaluationData();
                             Navigator.pop(context);
                             Navigator.pushNamed(context, '/evaluation');
                           },
@@ -77,6 +81,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.settings,
                           title: "Settings",
                           onTap: () async {
+                            genericSharedPreference.clearLocalEvaluationData();
                             Navigator.pop(context);
                             Navigator.pushNamed(context, '/login');
                           },
@@ -86,6 +91,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.exit_to_app,
                           title: "Logout",
                           onTap: () async {
+                            genericSharedPreference.clearLocalEvaluationData();
                             auth.logout();
                             Navigator.pop(context);
                             Navigator.pushNamed(context, '/login');

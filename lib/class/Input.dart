@@ -40,8 +40,6 @@ class _InputState extends State<Input> {
             height:     widget.label != '' ? 60.0 : 50.0,
             child: TextField(
               onChanged: (String value)  {
-                print(value);
-                print("onchange");
                 if (widget.onNameChangeCallback != null){
                   // if(value != widget.controller.text) {
                     widget.onNameChangeCallback(value);

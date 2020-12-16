@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pearlstone/model/RadioModel.dart';
 import 'package:pearlstone/utilities/constants.dart';
 import 'RadioItem.dart';
-import 'package:pearlstone/class/Answers.dart';
 
 class SelectableCard extends StatefulWidget {
   final List<RadioModel> options;
@@ -27,7 +26,7 @@ class _SelectableCardState extends State<SelectableCard> {
   @override
   Widget build(BuildContext context) {
     sampleData = widget.options;
-    print(sampleData.toString());
+    // print(sampleData.toString());
     return GridView.builder(
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -55,8 +54,7 @@ class _SelectableCardState extends State<SelectableCard> {
                 sampleData.forEach((element) => element.isSelected = false);
                 sampleData[index].isSelected = true;
 //                print('step ${widget.step}');
-                answer["turn_off"] = index;
-                widget.function();
+                widget.function(index);
 //                print(answer[widget.step]);
               });
             },

@@ -149,7 +149,7 @@ class _LoginState extends State<Login> {
         if (value == 'success') {
           navigateTo(context, path : '/search_customer' );
         }else{
-          print(value);
+          // print(value);
           setState(() {invalidLogin = true;});
         }
       });

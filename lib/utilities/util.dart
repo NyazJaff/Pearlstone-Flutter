@@ -3,9 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:pearlstone/sidebar/custom_drawer.dart';
 import 'constants.dart';
 import 'layout_helper.dart';
+import 'package:intl/intl.dart';
 
 double scrSize(BuildContext context){
-  print(MediaQuery.of(context).size.height / 100);
+  // print(MediaQuery.of(context).size.height / 100);
   return (MediaQuery.of(context).size.height / 100);
   // return MediaQuery.of(context).size.height;
 }
@@ -36,4 +37,15 @@ showToast(context, message){
     content: Text(message),
     duration: Duration(seconds: 2),
   ));
+}
+
+convertToCurrency(val){
+  return NumberFormat.simpleCurrency(name: '').format(val);
+}
+
+safeString(string){
+  if(string == null){
+    return '';
+  }
+  return string;
 }

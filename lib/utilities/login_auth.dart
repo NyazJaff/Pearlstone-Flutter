@@ -7,8 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class BaseAuth {
   Future<String> signIn(String email, String password);
 
-  // Future<String> signUp(String email, String password);
-
   Future<UserModel> getCurrentUser();
 
   // Future<void> sendEmailVerification();
@@ -61,6 +59,22 @@ class Auth implements BaseAuth {
   Future<void> logout() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.remove('current_user');
+  }
+
+  Future<Map<String, dynamic>> createNewUser(user) async {
+    Map<String, dynamic> data = {"status": "error"};
+    var userJson = user.toJson();
+    userJson.remove('id');
+    try{
+      await httpClient.makeJsonPost(userJson, url: 'user').then((response) async {
+        if(response['status'] == 'success'){
+          data = response;
+        }
+      });
+      return data;
+    }catch (e){
+      return data;
+    }
   }
 
   Future<List<UserModel>> getUsersByName(name) async {
