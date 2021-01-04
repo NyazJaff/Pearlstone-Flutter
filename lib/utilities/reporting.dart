@@ -9,14 +9,13 @@ class Reporting {
   MyHttpClient httpClient = new MyHttpClient();
 
   Future<Map<String, dynamic>>
-  getSavingCalculation() async {
+  getSavingCalculation(estimates) async {
     // var reportData = getLocalSavedReport(user.id + "saving_estimate");
     Reporting reporting = new Reporting();
     Map<String, dynamic> calculation = {};
 
-    print(await reporting.getLocalEstimateReportData());
     try{
-      await httpClient.makeJsonPost(await reporting.getLocalEstimateReportData(), url: 'report/saving_calculation').then((response) async {
+      await httpClient.makeJsonPost(estimates, url: 'report/saving_calculation').then((response) async {
         if(response['status'] == 'success'){
           calculation = response['data'];
           calculation['saving_calculation_id'] = response['saving_calculation_id'];
@@ -29,9 +28,9 @@ class Reporting {
   }
 
   Future<String>
-  sendEstimateReportEmail(userId, reportId) async {
+  sendEstimateReportEmail(user_id, report_id) async {
     // var reportData = getLocalSavedReport(user.id + "saving_estimate");
-    var reportData = {'user_id' : userId, 'report_id' : reportId};
+    var reportData = {'user_id' : user_id, 'report_id' : report_id};
     String status = 'error';
     try{
       await httpClient.makeJsonPost(reportData, url: 'report/saving_estimate').then((response) async {
@@ -50,15 +49,15 @@ class Reporting {
   Future<void>
   setLocalEstimateReportData(report) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('evaluation_values', json.encode(report));
+    await prefs.setString('EstimateReport', json.encode(report));
   }
 
   Future<Map<String, dynamic>>
   getLocalEstimateReportData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String reportString = pref.getString('evaluation_values');
+    String reportString = pref.getString('EstimateReport');
     if (reportString == null) {
-      return null;
+      return {};
     }
     return jsonDecode(reportString);
   }
@@ -82,13 +81,13 @@ class Reporting {
   Future<void>
   setEvaluationResultId(id) async{
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('current_evaluation_result_id', id.toString());
+    prefs.setString('current_calculation_result_id', id.toString());
   }
 
   Future<int>
   getEvaluationResultId() async{
     final prefs = await SharedPreferences.getInstance();
-    String id = prefs.getString('current_evaluation_result_id');
+    String id = prefs.getString('current_calculation_result_id');
     if (id == null) {
       return null;
     }

@@ -18,6 +18,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
   final GenericSharedPreference genericSharedPreference = new GenericSharedPreference();
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Future<void> initState() {
     // TODO: implement initState
     super.initState();
@@ -56,18 +61,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.person,
                           title: "Customers",
                           onTap: () {
-                            new GenericSharedPreference().clearLocalEvaluationData();
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/search_customer');
+                            navigateTo(context, path: '/search_customer');
                           },
                         ),
                         MenuItem(
                           icon: Icons.person_add,
                           title: "New Customer",
                           onTap: (){
-                            new GenericSharedPreference().clearLocalEvaluationData();
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/evaluation');
+                            navigateTo(context, path: '/evaluation');
                           },
                         ),
                         Divider(
@@ -82,8 +83,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           title: "Settings",
                           onTap: () async {
                             genericSharedPreference.clearLocalEvaluationData();
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/login');
+                            navigateTo(context, path: '/login');
                           },
                         ),
                         currentUser != null
@@ -93,9 +93,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           onTap: () async {
                             genericSharedPreference.clearLocalEvaluationData();
                             auth.logout();
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/login');
-                            setState(() {});
+                            navigateTo(context, path: '/login');
+                            // setState(() {});
                           },
                         )
                             : Container()

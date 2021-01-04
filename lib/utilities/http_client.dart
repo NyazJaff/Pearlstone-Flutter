@@ -43,6 +43,8 @@ class MyHttpClient  {
   }
 
   Future<Map<String, dynamic>> makeJsonGet({dataParam: "", url: ""}) async{
+    print(apiUrl());
+    print("apiUrl");
     String queryString = Uri(queryParameters: dataParam).query;
     var requestUrl = apiUrl() + url + '?' + queryString;
     var response = await http.get(requestUrl, headers: {
@@ -74,9 +76,10 @@ class MyHttpClient  {
   }
 
   String apiUrl(){
-   // if(!kReleaseMode) {
-     return 'http://localhost:3000/';
-   // }
-    // return 'https://anas-islam.herokuapp.com/api/v1/anas_islam/';
+    if(kReleaseMode){
+      // App Release Mode
+      return 'http://35.178.254.105/';
+    }
+    return 'http://localhost:3000/';
   }
 }

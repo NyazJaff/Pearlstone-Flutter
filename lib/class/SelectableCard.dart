@@ -7,7 +7,7 @@ class SelectableCard extends StatefulWidget {
   final List<RadioModel> options;
   int step;
   Function function;
-  SelectableCard({@required this.options, @required this.step, @required this.function});
+  SelectableCard({Key key, @required this.options, @required this.step, @required this.function}) : super(key: key);
 
   @override
   _SelectableCardState createState() => _SelectableCardState();
@@ -54,7 +54,7 @@ class _SelectableCardState extends State<SelectableCard> {
                 sampleData.forEach((element) => element.isSelected = false);
                 sampleData[index].isSelected = true;
 //                print('step ${widget.step}');
-                widget.function(index);
+                widget.function((index + 1) * 10);
 //                print(answer[widget.step]);
               });
             },

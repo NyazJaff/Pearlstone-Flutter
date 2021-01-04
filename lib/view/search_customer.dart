@@ -7,6 +7,7 @@ import 'package:pearlstone/utilities/reporting.dart';
 import 'package:pearlstone/utilities/util.dart';
 import '../utilities/constants.dart';
 import 'package:pearlstone/utilities/constants.dart';
+import 'package:flutter/foundation.dart';
 
 class SearchCustomer extends StatefulWidget {
   @override
@@ -83,7 +84,7 @@ class _SearchCustomerState extends State<SearchCustomer> {
                              onTap: () {
 
                                reporting.setCurrentEvaluationUserId(user.id);
-                               navigateTo(context, path: '/evaluation');
+                               navigateTo(context, path: '/evaluation', cleanUp: false);
                              }
                          ),
                        );
@@ -93,7 +94,7 @@ class _SearchCustomerState extends State<SearchCustomer> {
                  );
                }else{
                  return Container(
-                   child: loading(),
+                   child: display_loading(),
                  );
                }
              }
@@ -128,29 +129,29 @@ class _SearchCustomerState extends State<SearchCustomer> {
   }
 
   Widget _buildSignUpBtn() {
-    return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/register'),
-      child: RichText(
-        text: TextSpan(
-          children: <TextSpan>[
-            TextSpan(
-                text: 'New customer? ',
-                style: TextStyle(
-                  color: textAndIconColour,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                )
-            ),
-            TextSpan(text: 'Register!',
-                style: TextStyle(
-                  color: textAndIconColour,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                )
-            ),
-          ],
-        ),
-      ),
+    return FlatButton(
+        onPressed: () => navigateTo(context, path: '/register'),
+        child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                  text: 'New customer? ',
+                  style: TextStyle(
+                    color: textAndIconColour,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w400,
+                  )
+              ),
+              TextSpan(text: 'Register!',
+                  style: TextStyle(
+                    color: textAndIconColour,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  )
+              ),
+            ],
+          ),
+        )
     );
   }
 }

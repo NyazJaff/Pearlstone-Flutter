@@ -23,17 +23,16 @@ class _LoginState extends State<Login> {
 
   final email = TextEditingController();
   final password = TextEditingController();
+
   @override
   Future<void> initState() {
     // TODO: implement initState
-    super.initState();
-
     auth.getCurrentUser().then((user) {
       if(user != null){
-        Navigator.pop(context);
-        Navigator.pushNamed(context, '/search_customer');
+        navigateTo(context, path: '/search_customer');
       }
     });
+    super.initState();
   }
 
   @override

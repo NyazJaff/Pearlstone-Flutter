@@ -70,7 +70,7 @@ Widget largeActionButton(btnLabel, onPress, { width : double.infinity, icon: fal
       ),
       color: logoYellow,
       child: isLoading
-          ? loading(padding: 4.0)
+          ? display_loading(padding: 4.0)
           : Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -129,7 +129,7 @@ Widget buildBackground(){
   );
 }
 
-Widget loading({padding = 20.0}){
+Widget display_loading({padding = 20.0}){
   return Padding (
     padding: EdgeInsets.all(padding),
     child: ColorLoader4 (
@@ -181,3 +181,9 @@ mainViews(scaffoldKey,context, title, viewBody, {actions: const <Widget>[], bott
   );
 }
 
+
+closeKeyboard(context){
+  if(FocusScope.of(context).isFirstFocus) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+  }
+}

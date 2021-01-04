@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pearlstone/sidebar/custom_drawer.dart';
+import 'package:pearlstone/utilities/generic_shared_preference.dart';
 import 'constants.dart';
 import 'layout_helper.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,11 @@ double scrSize(BuildContext context){
   // return MediaQuery.of(context).size.height;
 }
 
-navigateTo(BuildContext context, {path: ''}){
+navigateTo(BuildContext context, {path: '', cleanUp: true}){
+  if(cleanUp == true){
+    new GenericSharedPreference().clearLocalEvaluationData();
+  }
+
   FocusScope.of(context).requestFocus(new FocusNode());
   Navigator.pop(context);
   if(path != ''){
@@ -40,6 +45,9 @@ showToast(context, message){
 }
 
 convertToCurrency(val){
+  if(val == null || val == ''){
+    return '';
+  }
   return NumberFormat.simpleCurrency(name: '').format(val);
 }
 

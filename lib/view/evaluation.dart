@@ -27,7 +27,7 @@ class _EvaluationState extends State<Evaluation> {
   Reporting reporting = new Reporting();
   Map<String, dynamic> answer = {'average_kws': 0, 'turn_off': null, 'events_per_week': 5, 'events_duration': 30.0};
 
-  static List<RadioModel> turn_off_options = [
+  final List<RadioModel> turn_off_options = [
     RadioModel(false, "low", "10%", Icons.low_priority),
     RadioModel(false, "medium", "20%", Icons.brightness_medium),
     RadioModel(false, "high", "30%", Icons.high_quality),
@@ -90,6 +90,7 @@ class _EvaluationState extends State<Evaluation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar (
         title: Text('Evaluation'),
@@ -106,32 +107,7 @@ class _EvaluationState extends State<Evaluation> {
               buildBackground(),
               Column(
                 children: <Widget>[
-                  complete
-                      ? Expanded(
-                    child: Center(
-                      child: AlertDialog(
-                        title: new Text("Profile Created"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            new Text(
-                              "Tada!",
-                            ),
-//                    method2()
-                          ],
-                        ),
-                        actions: <Widget>[
-                          new FlatButton(
-                            child: new Text("Close"),
-                            onPressed: () {
-                              setState(() => complete = false);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                      : Expanded(
+                  Expanded(
                     child: StatefulBuilder(
                         builder: (BuildContext context, StateSetter setState) {
                           return Stepper(
@@ -155,7 +131,7 @@ class _EvaluationState extends State<Evaluation> {
                             },
                           );
                         }),
-                  ),
+                  )
                 ],
               ),
             ],
@@ -214,14 +190,14 @@ class _EvaluationState extends State<Evaluation> {
     );
   }
 
-  refresh(index){
+  setTurnOffOption(value){
     setState(() {
-      answer["turn_off"] = index;
+      answer["turn_off"] = value;
     });
   }
 
   createTurnOffOption() {
-    return SelectableCard(options: turn_off_options, step: 1, function: refresh );
+    return new SelectableCard(key: UniqueKey(), options: turn_off_options, step: 1, function: setTurnOffOption );
 //    var is18AndOver = configSteps.firstWhere((user) => user['description'].startsWith('What is the assumed'));
 //    List<Text> textList = [] ;
 //    print(turnOffOptions);
@@ -341,7 +317,8 @@ class _EvaluationState extends State<Evaluation> {
                   onPressed: () {
                     setState(() {
                       var newVal = answer['events_per_week'] + 1 ;
-                      answer['events_per_week'] = newVal;
+                      if(newVal <= 10)
+                        answer['events_per_week'] = newVal;
                     });
                   },
                   child: Text(
@@ -453,8 +430,10 @@ class _EvaluationState extends State<Evaluation> {
   }
 
   callEvaluationResult() async{
-    await reporting.setLocalEstimateReportData(answer);
-    navigateTo(_scaffoldKey.currentContext, path:'/evaluation_result');
+    var repoting_data = await reporting.getSavingCalculation(answer);
+    await reporting.setLocalEstimateReportData(repoting_data).then((value) async =>{
+      navigateTo(_scaffoldKey.currentContext, path:'/evaluation_result', cleanUp: false)
+    });
   }
 
   cancel() {
@@ -464,6 +443,7 @@ class _EvaluationState extends State<Evaluation> {
   }
 
   goTo(int step) {
+    closeKeyboard(_scaffoldKey.currentContext);
     setState(() => _currentStep = step);
   }
 
