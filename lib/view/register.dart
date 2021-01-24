@@ -143,6 +143,8 @@ class _RegisterState extends State<Register> {
   }
 
   void registerNewUser() async{
+
+    String message = "User successfully created!";
     setState(() {
       isLoading = true;
     });
@@ -157,12 +159,22 @@ class _RegisterState extends State<Register> {
         postcode       : postcode.text);
 
     var newUserData = await auth.createNewUser(user);
+    print (newUserData);
+    if('success' != newUserData['status']) {
+      showToast(scaffoldKey.currentContext, "Failed to complete the task!");
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
     var evaluationResultId = await reporting.getEvaluationResultId();
 
-    print(newUserData);
-    print(evaluationResultId);
     if (evaluationResultId != null) {
-      await reporting.sendEstimateReportEmail(newUserData['user_id'], evaluationResultId);
+      var emailData = await reporting.sendEstimateReportEmail(newUserData['user_id'], evaluationResultId);
+      if('success' == emailData['success']) {
+        message = "Successfully sent report";
+      }
     }
 
     genericSharedPreference.clearLocalEvaluationData();

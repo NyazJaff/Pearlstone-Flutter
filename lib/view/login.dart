@@ -117,7 +117,7 @@ class _LoginState extends State<Login> {
       child: FlatButton(
         onPressed: () => print('Forgot Password Button Pressed'),
         child: Text(
-          'Forgot Password?',
+          'Login as a guess?',
           style: kLabelStyle,
         ),
       ),

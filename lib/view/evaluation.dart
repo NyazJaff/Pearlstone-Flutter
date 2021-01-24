@@ -251,7 +251,7 @@ class _EvaluationState extends State<Evaluation> {
                 Container (
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(top: 30, right: 10),
-                  child: Text("kWh", style: TextStyle (
+                  child: Text("kW", style: TextStyle (
                     fontWeight:  FontWeight.bold,
                     letterSpacing: 3,
                     fontFamily: 'OpenSans',

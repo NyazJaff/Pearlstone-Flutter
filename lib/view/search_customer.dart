@@ -105,8 +105,13 @@ class _SearchCustomerState extends State<SearchCustomer> {
    );
   }
 
+  onAfterBuild(context){
+    // showToast(scaffoldKey.currentContext, "Successfully sent report");
+  }
+
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => onAfterBuild(context));
     return mainViews(
         scaffoldKey,
         context,

@@ -27,22 +27,22 @@ class Reporting {
     }
   }
 
-  Future<String>
+  Future<Map<String, dynamic>>
   sendEstimateReportEmail(user_id, report_id) async {
+    Map<String, dynamic> data = {"status": "error"};
+
     // var reportData = getLocalSavedReport(user.id + "saving_estimate");
     var reportData = {'user_id' : user_id, 'report_id' : report_id};
     String status = 'error';
     try{
       await httpClient.makeJsonPost(reportData, url: 'report/saving_estimate').then((response) async {
         if(response['status'] == 'success'){
-          status = 'success';
-        }else{
-          status = response['message'] != null ? response['message'] : 'Failed to login';
+          data = response;
         }
       });
-      return status;
+      return data;
     }catch (e){
-      return 'error';
+      return data;
     }
   }
 

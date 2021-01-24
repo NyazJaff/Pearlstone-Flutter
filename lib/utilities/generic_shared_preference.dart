@@ -11,6 +11,6 @@ class GenericSharedPreference {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.remove('current_evaluation_user');
     pref.remove('evaluation_values');
-    pref.remove('current_evaluation_result_id');
+    pref.remove('current_calculation_result_id');
   }
 }

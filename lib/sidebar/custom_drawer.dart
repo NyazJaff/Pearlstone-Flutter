@@ -65,8 +65,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           },
                         ),
                         MenuItem(
-                          icon: Icons.person_add,
-                          title: "New Customer",
+                          icon: Icons.multiline_chart,
+                          title: "New Estimate",
                           onTap: (){
                             navigateTo(context, path: '/evaluation');
                           },

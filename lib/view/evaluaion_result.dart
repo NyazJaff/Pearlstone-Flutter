@@ -49,9 +49,9 @@ class _EvaluationResultState extends State<EvaluationResult> {
                   SizedBox(height: 15),
                   displayValue(ctx, 'Annual Triad Share',   convertToCurrency(data['annual_triad_share'])),
                   SizedBox(height: 15),
-                  displayValue(ctx, 'Annual Energy Share',  convertToCurrency(data['annual_energy_share'])),
+                  displayValue(ctx, 'Annual Energy Savings',  convertToCurrency(data['annual_energy_share'])),
                   SizedBox(height: 15),
-                  displayValue(ctx, 'Annual Customer Revenue',  convertToCurrency(data['annual_customer_revenue'])),
+                  displayValue(ctx, 'Annual Customer Revenue from National Grid',  convertToCurrency(data['annual_customer_revenue'])),
                   SizedBox(height: 15),
                   displayValue(ctx, 'Total Annual Benefit', convertToCurrency(data['total_annual_benefit'])),
                   SizedBox(height: 15),
@@ -125,13 +125,9 @@ class _EvaluationResultState extends State<EvaluationResult> {
   }
 
   emailReport(ctx, report_id) async{
-    if (loading == true){
-      return;
-    }
+    if (loading == true){ return;}
 
-    setState(() {
-      loading = true;
-    });
+    setState(() { loading = true; });
 
     var currentEvaluationUserId = await reporting.getCurrentEvaluationUserId();
     reporting.setEvaluationResultId(report_id);
