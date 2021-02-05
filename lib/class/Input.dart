@@ -8,6 +8,8 @@ class Input extends StatefulWidget {
   final bool     typePass;
   final IconData leadingIcon;
   final TextEditingController controller;
+  final TextInputAction textInputAction;
+  final TextInputType keyboardType;
   final void Function(String) onNameChangeCallback;
 
   const Input({Key key,
@@ -15,6 +17,8 @@ class Input extends StatefulWidget {
     this.hint        = '',
     this.typePass    = false,
     this.leadingIcon = Icons.lock,
+    this.textInputAction = TextInputAction.next,
+    this.keyboardType = TextInputType.text,
     this.controller,
     this.onNameChangeCallback}) : super(key: key);
 
@@ -31,7 +35,7 @@ class _InputState extends State<Input> {
       children: <Widget>[
         Text(
             widget.label,
-            style: kLabelStyle
+            style: kLabelStyle()
         ),
         SizedBox(height: widget.label != '' ? 10.0 : 0),
         Container(
@@ -39,6 +43,7 @@ class _InputState extends State<Input> {
             decoration: kBoxDecorationStyle,
             height:     widget.label != '' ? 60.0 : 50.0,
             child: TextField(
+              textInputAction: widget.textInputAction,
               onChanged: (String value)  {
                 if (widget.onNameChangeCallback != null){
                   // if(value != widget.controller.text) {
@@ -47,6 +52,7 @@ class _InputState extends State<Input> {
                 }
               },
               controller:  widget.controller,
+              keyboardType: widget.keyboardType,
               obscureText: widget.typePass,
               style: TextStyle(
                   color:      textAndIconColour,

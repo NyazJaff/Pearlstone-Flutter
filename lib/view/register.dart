@@ -22,6 +22,7 @@ class _RegisterState extends State<Register> {
   final Reporting reporting = new Reporting();
   final GenericSharedPreference genericSharedPreference  = new GenericSharedPreference();
   bool isLoading = false;
+  UserModel currentUser;
 
   TextEditingController first_name = TextEditingController();
   TextEditingController last_name = TextEditingController();
@@ -31,6 +32,18 @@ class _RegisterState extends State<Register> {
   TextEditingController address_line_1 = TextEditingController();
   TextEditingController address_line_2 = TextEditingController();
   TextEditingController postcode = TextEditingController();
+
+  @override
+  Future<void> initState() {
+    // TODO: implement initState
+    super.initState();
+
+    auth.getCurrentUser().then((user) {
+      setState(() {
+        currentUser = user;
+      });
+    });
+  }
 
   Widget _buildSignInBtn() {
     return GestureDetector(
@@ -96,6 +109,7 @@ class _RegisterState extends State<Register> {
               label: 'Email Address *',
               hint:  'Email Address',
               leadingIcon: Icons.email,
+              keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(height: 30.0),
             Input(
@@ -103,6 +117,7 @@ class _RegisterState extends State<Register> {
               label: 'Contact Number',
               hint:  'Contact Number',
               leadingIcon: Icons.phone_in_talk,
+              keyboardType: TextInputType.phone,
             ),
             SizedBox(height: 30.0),
             Input(
@@ -117,6 +132,7 @@ class _RegisterState extends State<Register> {
               label: 'Address Line 1 *',
               hint:  'Address Line 1',
               leadingIcon: Icons.pin_drop,
+              keyboardType: TextInputType.streetAddress,
             ),
             SizedBox(height: 30.0),
             Input(
@@ -124,9 +140,11 @@ class _RegisterState extends State<Register> {
               label: 'Address Line 2',
               hint:  'Address Line 2',
               leadingIcon: Icons.pin_drop,
+              keyboardType: TextInputType.streetAddress,
             ),
             SizedBox(height: 30.0),
             Input(
+              textInputAction: TextInputAction.done,
               controller: postcode,
               label: 'Postcode',
               hint:  'Postcode',
@@ -148,6 +166,11 @@ class _RegisterState extends State<Register> {
     setState(() {
       isLoading = true;
     });
+
+    var role = '0';
+    if(currentUser == null){
+      role = '2';
+    }
     UserModel user = UserModel(
         first_name     : first_name.text,
         last_name      : last_name.text,
@@ -156,7 +179,9 @@ class _RegisterState extends State<Register> {
         building_name  : building_name.text,
         address_line_1 : address_line_1.text,
         address_line_2 : address_line_2.text,
-        postcode       : postcode.text);
+        postcode       : postcode.text,
+        role           : role
+    );
 
     var newUserData = await auth.createNewUser(user);
     print (newUserData);
@@ -178,6 +203,11 @@ class _RegisterState extends State<Register> {
     }
 
     genericSharedPreference.clearLocalEvaluationData();
-    navigateTo(context, path:'/search_customer');
+    if(currentUser != null){
+      navigateTo(context, path:'/search_customer');
+    }else{
+      navigateTo(context, path:'/login');
+    }
+
   }
 }

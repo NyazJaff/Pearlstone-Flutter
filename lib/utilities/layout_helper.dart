@@ -20,11 +20,15 @@ final kHintTextStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
-final kLabelStyle = TextStyle(
-  color: textAndIconColour,
-  fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
-);
+
+TextStyle kLabelStyle({fontSize : 14.0}){
+  return TextStyle(
+    fontSize: fontSize,
+    color: textAndIconColour,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'OpenSans',
+  );
+}
 
 final kBoxDecorationStyle = BoxDecoration(
   color: Color(0xFFf5dc82),

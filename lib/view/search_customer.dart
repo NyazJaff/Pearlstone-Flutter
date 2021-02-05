@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pearlstone/class/Input.dart';
 import 'package:pearlstone/model/UserModel.dart';
+import 'package:pearlstone/utilities/generic_shared_preference.dart';
 import 'package:pearlstone/utilities/layout_helper.dart';
 import 'package:pearlstone/utilities/login_auth.dart';
 import 'package:pearlstone/utilities/reporting.dart';
@@ -135,7 +136,10 @@ class _SearchCustomerState extends State<SearchCustomer> {
 
   Widget _buildSignUpBtn() {
     return FlatButton(
-        onPressed: () => navigateTo(context, path: '/register'),
+        onPressed: () {
+          new GenericSharedPreference().clearLocalEvaluationData();
+          Navigator.pushNamed(context, '/register');
+        },
         child: RichText(
           text: TextSpan(
             children: <TextSpan>[

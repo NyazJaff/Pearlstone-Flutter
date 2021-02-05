@@ -43,8 +43,6 @@ class MyHttpClient  {
   }
 
   Future<Map<String, dynamic>> makeJsonGet({dataParam: "", url: ""}) async{
-    print(apiUrl());
-    print("apiUrl");
     String queryString = Uri(queryParameters: dataParam).query;
     var requestUrl = apiUrl() + url + '?' + queryString;
     var response = await http.get(requestUrl, headers: {
@@ -80,6 +78,6 @@ class MyHttpClient  {
       // App Release Mode
       return 'http://35.178.254.105/';
     }
-    return 'http://localhost:3000/';
+    return 'http://192.168.0.38:3000/';
   }
 }

@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
       children: <Widget>[
         Text(
             'Email',
-            style: kLabelStyle
+            style: kLabelStyle()
         ),
         SizedBox(height: 10.0),
         Container(
@@ -82,7 +82,7 @@ class _LoginState extends State<Login> {
       children: <Widget>[
         Text(
             'Password',
-            style: kLabelStyle
+            style: kLabelStyle()
         ),
         SizedBox(height: 10.0),
         Container(
@@ -111,14 +111,16 @@ class _LoginState extends State<Login> {
       ],
     );
   }
-  Widget _buildForgotPasswordBtn(){
+  Widget _buildLoginAsGuest(){
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
+        onPressed: () => {
+          Navigator.pushNamed(context, '/evaluation')
+        },
         child: Text(
           'Login as a guess?',
-          style: kLabelStyle,
+          style: kLabelStyle(),
         ),
       ),
     );
@@ -214,9 +216,13 @@ class _LoginState extends State<Login> {
                       SizedBox(height: 30.0),
                       _buildPassword(),
                       _buildInvalidLogin(),
-                      _buildForgotPasswordBtn(),
+                      _buildLoginAsGuest(),
                       _buildLoginBtn(),
                       SizedBox(height: 40.0),
+                      Text(
+                        'Please visit our website www.pearlstoneenegy.com or email us at support@pearlstoneenergy.com for more information.',
+                        style: kLabelStyle(fontSize: 12.0),
+                      )
                       // _buildSignUpBtn(),
                     ],
                   ),

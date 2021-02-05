@@ -55,11 +55,11 @@ class _EvaluationResultState extends State<EvaluationResult> {
                   SizedBox(height: 15),
                   displayValue(ctx, 'Total Annual Benefit', convertToCurrency(data['total_annual_benefit'])),
                   SizedBox(height: 15),
-                  displayValue(ctx, 'Carbon Emission Reduction', data['carbon_emission_reduction'], trailing: 'kg/kWh' ),
+                  displayValue(ctx, 'Carbon Emission Reduction', convertToCurrency(data['carbon_emission_reduction']), trailing: 'kg/kWh' ),
                   SizedBox(height: scrSize(ctx) * 2),
                   SizedBox(height: scrSize(ctx) * 2),
                   Container(
-                    width: 150,
+                    width: 160,
                     child: FlatButton(
                         onPressed: () => {
                           navigateTo(context, path: '/evaluation', cleanUp: false)},
@@ -133,7 +133,7 @@ class _EvaluationResultState extends State<EvaluationResult> {
     reporting.setEvaluationResultId(report_id);
 
     if(currentEvaluationUserId == null){
-      navigateTo(ctx, path: '/register', cleanUp: false);
+      Navigator.pushNamed(ctx, '/register');
     }else{
       await reporting.sendEstimateReportEmail(currentEvaluationUserId, report_id);
 

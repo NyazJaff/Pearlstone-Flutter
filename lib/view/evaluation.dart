@@ -95,7 +95,7 @@ class _EvaluationState extends State<Evaluation> {
       appBar: AppBar (
         title: Text('Evaluation'),
         leading: new IconButton( icon: new Icon(Icons.clear), tooltip: 'Main', onPressed: () {
-          navigateTo(context, path: '/search_customer');
+          Navigator.pop(context);
         }),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -432,7 +432,7 @@ class _EvaluationState extends State<Evaluation> {
   callEvaluationResult() async{
     var repoting_data = await reporting.getSavingCalculation(answer);
     await reporting.setLocalEstimateReportData(repoting_data).then((value) async =>{
-      navigateTo(_scaffoldKey.currentContext, path:'/evaluation_result', cleanUp: false)
+      Navigator.pushNamed(_scaffoldKey.currentContext, '/evaluation_result')
     });
   }
 

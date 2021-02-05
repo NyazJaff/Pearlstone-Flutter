@@ -32,7 +32,7 @@ class UserModel {
     String second_name = '',
     String city = '',
     String country = '',
-    String role = ''})
+    String role = '0'})
       : first_name     = first_name,
         last_name      = last_name,
         email          = email,
@@ -80,6 +80,8 @@ class UserModel {
         'country'        : country,
         'postcode'       : postcode,
         'email'          : email,
+        'role'           : role,
+
       };
 }
 
