@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pearlstone/class/Input.dart';
 import 'package:pearlstone/model/UserModel.dart';
+import 'package:pearlstone/sidebar/custom_drawer.dart';
 import 'package:pearlstone/utilities/generic_shared_preference.dart';
 import 'package:pearlstone/utilities/layout_helper.dart';
 import 'package:pearlstone/utilities/login_auth.dart';
@@ -22,6 +23,7 @@ class _RegisterState extends State<Register> {
   final Reporting reporting = new Reporting();
   final GenericSharedPreference genericSharedPreference  = new GenericSharedPreference();
   bool isLoading = false;
+  bool invalidValidation = false;
   UserModel currentUser;
 
   TextEditingController first_name = TextEditingController();
@@ -33,11 +35,13 @@ class _RegisterState extends State<Register> {
   TextEditingController address_line_2 = TextEditingController();
   TextEditingController postcode = TextEditingController();
 
+  List<TextEditingController> inputsToValidate;
   @override
   Future<void> initState() {
     // TODO: implement initState
     super.initState();
 
+    inputsToValidate = [first_name, last_name, email, building_name, address_line_1];
     auth.getCurrentUser().then((user) {
       setState(() {
         currentUser = user;
@@ -74,90 +78,114 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return mainViews(scaffoldKey, context, 'New Customer',  Container(
+    return mainViews(scaffoldKey, context,  Container(
       height: double.infinity,
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 30.0),
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Welcome!',
-              style: TextStyle(
-                  color: textAndIconColour,
-                  fontFamily: 'OpenSans',
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold
-              ),
-            ),
-            Input(
-              controller: first_name,
-              label: 'First Name *',
-              hint:  'First Name',
-              leadingIcon: Icons.person,
-            ),
-            SizedBox(height: 30.0),
-            Input(
-              controller: last_name,
-              label: 'Family Name *',
-              hint:  'Family Name',
-              leadingIcon: Icons.person,
-            ),
-            SizedBox(height: 30.0),
-            Input(
-              controller: email,
-              label: 'Email Address *',
-              hint:  'Email Address',
-              leadingIcon: Icons.email,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            SizedBox(height: 30.0),
-            Input(
-              controller: contact_number,
-              label: 'Contact Number',
-              hint:  'Contact Number',
-              leadingIcon: Icons.phone_in_talk,
-              keyboardType: TextInputType.phone,
-            ),
-            SizedBox(height: 30.0),
-            Input(
-              controller: building_name,
-              label: 'Building Name *',
-              hint:  'Building Name',
-              leadingIcon: Icons.home,
-            ),
-            SizedBox(height: 30.0),
-            Input(
-              controller: address_line_1,
-              label: 'Address Line 1 *',
-              hint:  'Address Line 1',
-              leadingIcon: Icons.pin_drop,
-              keyboardType: TextInputType.streetAddress,
-            ),
-            SizedBox(height: 30.0),
-            Input(
-              controller: address_line_2,
-              label: 'Address Line 2',
-              hint:  'Address Line 2',
-              leadingIcon: Icons.pin_drop,
-              keyboardType: TextInputType.streetAddress,
-            ),
-            SizedBox(height: 30.0),
-            Input(
-              textInputAction: TextInputAction.done,
-              controller: postcode,
-              label: 'Postcode',
-              hint:  'Postcode',
-              leadingIcon: Icons.pin_drop,
-            ),
-            SizedBox(height: 30.0),
-            largeActionButton("REGISTER", registerNewUser, isLoading: isLoading ),
-            SizedBox(height: 40.0),
-            // _buildSignInBtn(),
-          ],
-        ),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.transparent,
+        appBar: createAppBar('New Customer'),
+        body: Builder(
+            builder: (BuildContext context) {
+              return Container(
+                height: double.infinity,
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 30.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Welcome!',
+                        style: TextStyle(
+                            color: textAndIconColour,
+                            fontFamily: 'OpenSans',
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Input(
+                        controller: first_name,
+                        label: 'First Name *',
+                        hint:  'First Name',
+                        leadingIcon: Icons.person,
+                      ),
+                      SizedBox(height: 30.0),
+                      Input(
+                        controller: last_name,
+                        label: 'Family Name *',
+                        hint:  'Family Name',
+                        leadingIcon: Icons.person,
+                      ),
+                      SizedBox(height: 30.0),
+                      Input(
+                        controller: email,
+                        label: 'Email Address *',
+                        hint:  'Email Address',
+                        leadingIcon: Icons.email,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      SizedBox(height: 30.0),
+                      Input(
+                        controller: contact_number,
+                        label: 'Contact Number',
+                        hint:  'Contact Number',
+                        leadingIcon: Icons.phone_in_talk,
+                        keyboardType: TextInputType.phone,
+                      ),
+                      SizedBox(height: 30.0),
+                      Input(
+                        controller: building_name,
+                        label: 'Building Name *',
+                        hint:  'Building Name',
+                        leadingIcon: Icons.home,
+                      ),
+                      SizedBox(height: 30.0),
+                      Input(
+                        controller: address_line_1,
+                        label: 'Address Line 1 *',
+                        hint:  'Address Line 1',
+                        leadingIcon: Icons.pin_drop,
+                        keyboardType: TextInputType.streetAddress,
+                      ),
+                      SizedBox(height: 30.0),
+                      Input(
+                        controller: address_line_2,
+                        label: 'Address Line 2',
+                        hint:  'Address Line 2',
+                        leadingIcon: Icons.pin_drop,
+                        keyboardType: TextInputType.streetAddress,
+                      ),
+                      SizedBox(height: 30.0),
+                      Input(
+                        textInputAction: TextInputAction.done,
+                        controller: postcode,
+                        label: 'Postcode',
+                        hint:  'Postcode',
+                        leadingIcon: Icons.pin_drop,
+                      ),
+                      SizedBox(height: 30.0),
+                      _buildInvalidData(),
+                      largeActionButton("REGISTER", registerNewUser, isLoading: isLoading ),
+                      SizedBox(height: 40.0),
+                      // _buildSignInBtn(),
+                    ],
+                  ),
+                ),
+              );
+            }),
       ),
     ));
+  }
+
+  Future<bool> validateData() async{
+    invalidValidation = false;
+    inputsToValidate.forEach((element) {
+      if(element.text == ''){
+        setState(() {
+          invalidValidation = true;
+        });
+      }
+    });
+    return !invalidValidation;
   }
 
   void registerNewUser() async{
@@ -166,6 +194,12 @@ class _RegisterState extends State<Register> {
     setState(() {
       isLoading = true;
     });
+
+    var validData = await validateData();
+    if (validData == false) {
+      setState(() { isLoading = false; });
+      return;
+    }
 
     var role = '0';
     if(currentUser == null){
@@ -209,5 +243,24 @@ class _RegisterState extends State<Register> {
       navigateTo(context, path:'/login');
     }
 
+  }
+
+  Widget _buildInvalidData(){
+    return invalidValidation == true
+        ? Container(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          'Missing required* field',
+          style: TextStyle(
+            color: Colors.deepOrange,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    )
+        : Container();
   }
 }

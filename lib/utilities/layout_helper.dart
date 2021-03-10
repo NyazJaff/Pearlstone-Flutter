@@ -1,10 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:pearlstone/loading/flip_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:pearlstone/model/UserModel.dart';
 import 'package:pearlstone/sidebar/custom_drawer.dart';
 import 'package:pearlstone/utilities/util.dart';
 
 import 'constants.dart';
+import 'login_auth.dart';
 
 TextStyle txtStyle({paramColour: APP_BAR, double paramSize: 20.0, paramBold: false}){
   return TextStyle(
@@ -145,7 +147,27 @@ Widget display_loading({padding = 20.0}){
   );
 }
 
-mainViews(scaffoldKey,context, title, viewBody, {actions: const <Widget>[], bottomNavigationBar: false}){
+currentUser() async {
+  UserModel currentUser;
+  final Auth auth = new Auth();
+  await auth.getCurrentUser().then((user) {
+    currentUser = user;
+  });
+  return currentUser;
+}
+
+Widget createAppBar(title, {actions: const <Widget>[]}){
+  return AppBar(
+      title: Text(title),
+      iconTheme: new IconThemeData(color: APP_BAR),
+      actions: actions
+    // The icon and color for drawer, by default is white
+    // backgroundColor: Colors.transparent,
+    // elevation: 0.0,
+  );
+}
+
+mainViews(scaffoldKey, context, viewBody) {
   return Scaffold(
       body:  AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
@@ -159,26 +181,7 @@ mainViews(scaffoldKey,context, title, viewBody, {actions: const <Widget>[], bott
           },
           child:  Stack(children: <Widget>[
             buildBackground(),
-            Scaffold(
-                key: scaffoldKey,
-                backgroundColor: Colors.transparent,
-                drawer: CustomDrawer(),
-                appBar: AppBar(
-                    title: Text(title),
-                    iconTheme: new IconThemeData(color: APP_BAR),
-                    actions: actions
-                  // The icon and color for drawer, by default is white
-                  // backgroundColor: Colors.transparent,
-                  // elevation: 0.0,
-                ),
-                body: Builder(
-                    builder: (BuildContext context) {
-                      return viewBody;
-                    }),
-                bottomNavigationBar : bottomNavigationBar != false
-                    ? bottomNavigationBar
-                    : Container(child: Text(''),)
-            ),
+            viewBody
           ]),
         ),
       )

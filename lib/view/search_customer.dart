@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pearlstone/class/Input.dart';
 import 'package:pearlstone/model/UserModel.dart';
+import 'package:pearlstone/sidebar/custom_drawer.dart';
 import 'package:pearlstone/utilities/generic_shared_preference.dart';
 import 'package:pearlstone/utilities/layout_helper.dart';
 import 'package:pearlstone/utilities/login_auth.dart';
@@ -45,65 +46,65 @@ class _SearchCustomerState extends State<SearchCustomer> {
   }
 
   currentCustomers(){
-   return FittedBox(
-     child: Container(
-         alignment:  Alignment.center,
-         decoration:  valueBoxDecorationStyle,
-         width: 300,
-       padding: EdgeInsets.only(bottom: 20),
-       child: Column(
-         children: <Widget>[
-           Input(
-             onNameChangeCallback: onNameChangeCallback,
-             controller:  nameSearch,
-             hint:        'Customer name',
-             leadingIcon: Icons.person_pin,
-           ),
-           FutureBuilder(
-             future: auth.getUsersByName(nameSearch.text),
-             builder: (context, snapshot){
-               if (snapshot.connectionState == ConnectionState.done) {
-                 return Container(
-                   height: 200,
-                   child: ListView.separated (
-                     itemCount: snapshot.data.length,
-                     itemBuilder: (BuildContext context, int index){
-                       UserModel user = snapshot.data[index];
-                       return Material(
-                         type: MaterialType.transparency,
-                         child: ListTile(
-                             title: Text(user.first_name + " " + (safeString(user.last_name))),
-                             subtitle:  Container(
-                               child: Column(
-                                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                                 children: <Widget>[
-                                   Container(
-                                     child: Text("ID: "+user.id.toString()),
-                                   ),
-                                 ],
-                               ),),
-                             onTap: () {
+    return FittedBox(
+      child: Container(
+          alignment:  Alignment.center,
+          decoration:  valueBoxDecorationStyle,
+          width: 300,
+          padding: EdgeInsets.only(bottom: 20),
+          child: Column(
+            children: <Widget>[
+              Input(
+                onNameChangeCallback: onNameChangeCallback,
+                controller:  nameSearch,
+                hint:        'Customer name',
+                leadingIcon: Icons.person_pin,
+              ),
+              FutureBuilder(
+                  future: auth.getUsersByName(nameSearch.text),
+                  builder: (context, snapshot){
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Container(
+                        height: 200,
+                        child: ListView.separated (
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index){
+                            UserModel user = snapshot.data[index];
+                            return Material(
+                              type: MaterialType.transparency,
+                              child: ListTile(
+                                  title: Text(user.first_name + " " + (safeString(user.last_name))),
+                                  subtitle:  Container(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        Container(
+                                          child: Text("ID: "+user.id.toString()),
+                                        ),
+                                      ],
+                                    ),),
+                                  onTap: () {
 
-                               reporting.setCurrentEvaluationUserId(user.id);
-                               navigateTo(context, path: '/evaluation', cleanUp: false);
-                             }
-                         ),
-                       );
-                     }, separatorBuilder: (BuildContext context, int index) {
-                     return Container();
-                   },),
-                 );
-               }else{
-                 return Container(
-                   child: display_loading(),
-                 );
-               }
-             }
-           ),
-         ],
-       )
-     ),
-   );
+                                    reporting.setCurrentEvaluationUserId(user.id);
+                                    navigateTo(context, path: '/evaluation', cleanUp: false);
+                                  }
+                              ),
+                            );
+                          }, separatorBuilder: (BuildContext context, int index) {
+                          return Container();
+                        },),
+                      );
+                    }else{
+                      return Container(
+                        child: display_loading(),
+                      );
+                    }
+                  }
+              ),
+            ],
+          )
+      ),
+    );
   }
 
   onAfterBuild(context){
@@ -114,23 +115,34 @@ class _SearchCustomerState extends State<SearchCustomer> {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => onAfterBuild(context));
     return mainViews(
-        scaffoldKey,
-        context,
-        'Search existing Customers',
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                SizedBox(height: 20),
-                currentCustomers(),
-                SizedBox(height: 20),
-                _buildSignUpBtn()
-              ],
-            )
+      scaffoldKey,
+      context,
+      Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.transparent,
+        drawer: CustomDrawer(),
+        appBar: createAppBar('New Customer'),
+        body: Builder(
+            builder: (BuildContext context) {
+              return Container(
+                height: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        SizedBox(height: 20),
+                        currentCustomers(),
+                        SizedBox(height: 20),
+                        _buildSignUpBtn()
+                      ],
+                    )
 
-          ],
-        )
+                  ],
+                ),
+              );
+            }),
+      ),
     );
   }
 
