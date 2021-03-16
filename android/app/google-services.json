@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:829309297995:android:0faa3e9c30827f2371b4ce",
         "android_client_info": {
-          "package_name": "com.pearlstoneenergy.mobile.pearlstone"
+          "package_name": "com.pearlstoneenergy.mobile.pearlstone.nyazjaff"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "829309297995-se24213grj4sbj77fdn504aa78j2r4dm.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.pearlstoneenergy.mobile.pearlstone"
+                "bundle_id": "com.pearlstoneenergy.mobile.pearlstone.nyazjaff"
               }
             }
           ]

@@ -25,6 +25,8 @@ class Auth implements BaseAuth {
         "email": email,
         "password": password,
       }, url: 'user/login').then((response) async {
+        print(response);
+        print("response");
         if(response['status'] == 'success'){
           UserModel user = UserModel.fromJson(response['user']);
           await setCurrentUser(user);

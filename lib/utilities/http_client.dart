@@ -74,10 +74,10 @@ class MyHttpClient  {
   }
 
   String apiUrl(){
-    if(kReleaseMode){
+    // if(kReleaseMode){
       // App Release Mode
       return 'http://35.178.254.105/';
-    }
-    return 'http://192.168.0.38:3000/';
+    // }
+    // return 'http://192.168.0.38:3000/';
   }
 }
