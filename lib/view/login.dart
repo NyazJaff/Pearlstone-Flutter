@@ -24,6 +24,8 @@ class _LoginState extends State<Login> {
   final email = TextEditingController();
   final password = TextEditingController();
 
+  GlobalKey _toolTipKey = GlobalKey();
+
   @override
   Future<void> initState() {
     // TODO: implement initState
@@ -119,7 +121,7 @@ class _LoginState extends State<Login> {
           Navigator.pushNamed(context, '/evaluation')
         },
         child: Text(
-          'Login as a guess?',
+          'Login as a guest?',
           style: kLabelStyle(),
         ),
       ),
@@ -216,7 +218,31 @@ class _LoginState extends State<Login> {
                       SizedBox(height: 30.0),
                       _buildPassword(),
                       _buildInvalidLogin(),
-                      _buildLoginAsGuest(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _buildLoginAsGuest(),
+                          GestureDetector(
+                            onTap: () {
+                              final dynamic tooltip = _toolTipKey.currentState;
+                              tooltip.ensureTooltipVisible();
+                            },
+                            child: Tooltip(
+                              key: _toolTipKey,
+                              message: 'By providing basic data on your electricity consumption, we can provide you with a report containing details of DSR potential and flexibility in your portfolio of facilities. Pearlstone will then work with you to translate the report findings into real savings – and carbon footprint reduction – for your business.',
+                              child: Icon(Icons.info, color: Colors.grey,),
+                                padding : EdgeInsets.all(10),
+                              margin: EdgeInsets.all(10),
+                              showDuration: Duration(seconds: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.9),
+                                borderRadius: const BorderRadius.all(Radius.circular(4)),
+                              ),
+                              textStyle: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
                       _buildLoginBtn(),
                       SizedBox(height: 40.0),
                       Text(

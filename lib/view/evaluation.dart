@@ -35,7 +35,7 @@ class _EvaluationState extends State<Evaluation> {
 
   List<Map<String, dynamic>> configSteps = [
     { "key"              : "average_kws",
-      "description"      : "What is the peak demand (kw)?",
+      "description"      : "What is the peak demand (kW)?",
       "tip"              : "Tip: What average kW's hour is?",
       "data"             : ''
     },

@@ -252,7 +252,7 @@ class _RegisterState extends State<Register> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          'Missing required* field',
+          'Missing required* fields',
           style: TextStyle(
             color: Colors.deepOrange,
             fontWeight: FontWeight.bold,
