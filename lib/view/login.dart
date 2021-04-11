@@ -222,6 +222,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           _buildLoginAsGuest(),
+
                           GestureDetector(
                             onTap: () {
                               final dynamic tooltip = _toolTipKey.currentState;
@@ -235,7 +236,7 @@ class _LoginState extends State<Login> {
                               margin: EdgeInsets.all(10),
                               showDuration: Duration(seconds: 10),
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.9),
+                                color: Colors.grey,
                                 borderRadius: const BorderRadius.all(Radius.circular(4)),
                               ),
                               textStyle: TextStyle(color: Colors.white),

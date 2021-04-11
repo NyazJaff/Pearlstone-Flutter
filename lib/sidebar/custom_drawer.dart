@@ -78,14 +78,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           indent: 32,
                           endIndent: 32,
                         ),
-                        MenuItem(
-                          icon: Icons.settings,
-                          title: "Settings",
-                          onTap: () async {
-                            genericSharedPreference.clearLocalEvaluationData();
-                            navigateTo(context, path: '/login');
-                          },
-                        ),
+                        // MenuItem(
+                        //   icon: Icons.settings,
+                        //   title: "Settings",
+                        //   onTap: () async {
+                        //     genericSharedPreference.clearLocalEvaluationData();
+                        //     navigateTo(context, path: '/login');
+                        //   },
+                        // ),
                         currentUser != null
                             ? MenuItem(
                           icon: Icons.exit_to_app,
@@ -111,21 +111,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 width: double.infinity,
                 color: Colors.amber,
 //                    padding: EdgeInsets.all(0),
-                child: ListTile (
-                  leading: Icon(Icons.report_problem,color: DRAWER, size: 40.0),
-                  title: Text.rich(
-                          TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(text: 'Found an issue?'),
-                              // TextSpan(text: ' Nyaz Jaff'),
-                            ],
-                          )),
-                  subtitle: Text ("Log it here.."),
-                  onTap: (){
-                    Navigator.pop(context);
-                    launchURL('https://www.linkedin.com/in/nyazjaff/');
-                  },
-                )
+//                 child: ListTile (
+//                   leading: Icon(Icons.report_problem,color: DRAWER, size: 40.0),
+//                   title: Text.rich(
+//                           TextSpan(
+//                             children: <TextSpan>[
+//                               TextSpan(text: 'Found an issue?'),
+//                               // TextSpan(text: ' Nyaz Jaff'),
+//                             ],
+//                           )),
+//                   subtitle: Text ("Log it here.."),
+//                   onTap: (){
+//                     Navigator.pop(context);
+//                     launchURL('https://www.linkedin.com/in/nyazjaff/');
+//                   },
+//                 )
               ),
             ),
           ),
