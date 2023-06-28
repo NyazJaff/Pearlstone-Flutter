@@ -1,6 +1,6 @@
 # pearlstone
 
-Mobile Appliucation - Pearlstone Energy 
+Mobile Appliucation - Pearlstone Energy.
 
 ## Getting Started
 
